@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+	<xs:element name="Events" type="eventsType" />
+
+	<xs:complexType name="eventsType">
+		<xs:element name="event" type="eType" maxOccurs="unbounded" minOccurs="0" />
+	</xs:complexType>
+
+	<xs:complexType name="eType">
+		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
+		<xs:sequence>
+			<xs:element name="Spielzeitraum" type="dType" />
+			<xs:element name="Sportart" type="sType" />
+			<xs:element name="Oertlichkeit" type="oType" />
+			<xs:element name="Spielerliste" type="slType" />
+			<xs:element name="Backlist" type="btype" />
+			<xs:element name="Admin" type="spielerType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="sType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fußball" />
+			<xs:enumeration value="Basketball" />
+			<xs:enumeration value="Tennis" />
+		</xs:restriction>
+	</xs:complexType>
+
+	<xs:complexType name="slType">
+		<xs:element name="Spieler" type="spielerType"/>
+	</xs:complexType>
+	
+	<xs:complexType name="spielerType">
+		<xs:element name="Anzeigename" type="xs:string"/>
+		<xs:element name="Telefonnummer" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="bType">
+		<xs:element name="Spieler" type="spielerType" maxOccurs="unbounded"/>
+	</xs:complexType>
+
+	<xs:complexType name="oType">
+		<xs:restriction>
+			<xs:enumaration value="kostenlose Plaetze" type=
+		</xs:restriction>
+	</xs:complexType>
+	
+	<xs:complexType name="dType">
+		<xs:sequence>
+			<xs:element name="von" type="xs:dateTime"/>
+			<xs:element name="bis" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+
+
+
+</schema>
