@@ -1,3 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/spielerHinzufuegen" xmlns:tns="http://www.example.org/spielerHinzufuegen" elementFormDefault="qualified">
-</schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="event" type="eType" />
+
+	<xs:complexType name="eType">
+		<xs:sequence>
+			<xs:element name="Spielerliste" type="slType" />
+		</xs:sequence>
+		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
+	</xs:complexType>
+
+	<xs:complexType name="slType">
+		<xs:sequence>
+			<xs:element name="Spieler" type="spielerType"/>
+		</xs:sequence>
+		<xs:attribute name="min.Spieler" type="xs:positiveInteger"/> <!--  richtig so?? -->
+		<xs:attribute name="max.Spieler" type="xs:positiveInteger"/>
+	</xs:complexType>
+
+	<xs:complexType name="spielerType">
+		<xs:sequence>
+			<xs:element name="Anzeigename" type="xs:string" />
+			<xs:element name="Telefonnummer" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="subAdmin" type="xs:boolean"/>
+	</xs:complexType>
+
+
+</xs:schema>

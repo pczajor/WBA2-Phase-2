@@ -1,3 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/aboErstellen" xmlns:tns="http://www.example.org/aboErstellen" elementFormDefault="qualified">
-</schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="abo" type="eType"/>
+
+<xs:complexType name="eType">
+		<xs:sequence>
+			<xs:element name="Spielzeitraum" type="dType" />
+			<xs:element name="Sportart" type="sType" />
+			<xs:element name="Oertlichkeit" type="oType" />
+			<xs:element name="Backlist" type="bType" />
+		</xs:sequence>
+		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
+	</xs:complexType>
+
+	<xs:simpleType name="sType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fußball" />
+			<xs:enumeration value="Basketball" />
+			<xs:enumeration value="Tennis" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="spielerType">
+		<xs:sequence>
+			<xs:element name="Anzeigename" type="xs:string" />
+			<xs:element name="Telefonnummer" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="subAdmin" type="xs:boolean"/>
+	</xs:complexType>
+
+	<xs:complexType name="bType">
+		<xs:sequence>
+			<xs:element name="Spieler" type="spielerType" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="oType">
+		<xs:sequence>
+			<xs:element name="Platz" type="xs:string" />
+			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
+			<xs:element name="Preis">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="dType">
+		<xs:sequence>
+			<xs:element name="von" type="xs:dateTime" />
+			<xs:element name="bis" type="xs:dateTime" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+</xs:schema>

@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/vereinMischtSichEin" xmlns:tns="http://www.example.org/vereinMischtSichEin" elementFormDefault="qualified">
-</schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="event" type="eType" />
+	<xs:element name="nachricht" type="xs:string"/>
+
+	<xs:complexType name="eType">
+		<xs:sequence>
+			<xs:element name="Spielzeitraum" type="dType" />
+		</xs:sequence>
+		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
+	</xs:complexType>
+
+	<xs:complexType name="dType">
+		<xs:sequence>
+			<xs:element name="von" type="xs:dateTime" />
+			<xs:element name="bis" type="xs:dateTime" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

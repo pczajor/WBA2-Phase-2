@@ -57,6 +57,7 @@
 	<xs:complexType name="oType">
 		<xs:sequence>
 			<xs:element name="Platz" type="xs:string" />
+			<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
 			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
 			<xs:element name="Preis">
 				<xs:simpleType>
