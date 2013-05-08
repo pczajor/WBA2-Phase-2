@@ -3,6 +3,7 @@
 
 	<xs:element name="event" type="eType" />
 	<xs:element name="nachricht" type="xs:string"/>
+	<xs:element name="absage" type="xs:boolean"/>
 
 	<xs:complexType name="eType">
 		<xs:sequence>
