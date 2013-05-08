@@ -8,9 +8,8 @@
 			<xs:element name="Spielzeitraum" type="dType" />
 			<xs:element name="Sportart" type="sType" />
 			<xs:element name="Oertlichkeit" type="oType" />
-			<xs:element name="Backlist" type="bType" />
+			<xs:element name="Backlist" type="bType" /> <!-- auf dem client? -->
 		</xs:sequence>
-		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
 	</xs:complexType>
 
 	<xs:simpleType name="sType">
