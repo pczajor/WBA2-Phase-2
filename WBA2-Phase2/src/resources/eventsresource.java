@@ -91,10 +91,9 @@ public class eventsresource {
 				+ event.getSpielzeitraum() + ", " + event.getSportart() + ", "
 				+ event.getOertlichkeit() + ", " + event.getSpielerliste() + ", "
 						+ event.getBacklist() + ", " + event.getAdmin() + ")");
-		int test = events.getEvent().size();
-		BigInteger index = test; //BigInteger zu int?
+		int index = events.getEvent().size();
 
-		event.setEventID(index);
+		event.setEventID(BigInteger.valueOf(index));
 		
 		URI location = uriInfo.getAbsolutePathBuilder().path("" + index).build();
 
