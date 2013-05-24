@@ -1,7 +1,11 @@
 package resources;
 
+import Rezepte;
+import generated.RType;
+import generated.RezepteType;
 import jaxb.*;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
@@ -20,38 +24,53 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import com.sun.jersey.api.NotFoundException;
 
-
 @Path("recources")
 public class eventsresource {
+
+	public eventsresource() throws Exception {
+		String xmlDatei = "../Events.xml";
+
+		JAXBContext context = JAXBContext.newInstance(EventsType.class);
+		Unmarshaller u = context.createUnmarshaller();
+
+		EventsType eventliste = (EventsType) u.unmarshal(
+				new StreamSource(new File(xmlDatei)), EventsType.class)
+				.getValue();
+		ArrayList<EType> liste = (ArrayList<EType>) eventliste.getEvent();
+	}
 
 	public static EventsType events = new EventsType();
 
 	@Context
 	UriInfo uriInfo;
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public List<EType> getEvents() {
 		return events.getEvent();
 	}
 
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response postevent(EType event){
-		URI location = addevent(event); 
+	public Response postevent(EType event) {
+		URI location = addevent(event);
 
 		return Response.created(location).build();
 	}
-	
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response postevent(@FormParam("Spielzeitaum") DType spielzeitraum,
-			@FormParam("Event-ID") BigInteger eventID, // die ID ist ein Attribut, ist es trotzdem richtig so?
+	public Response postevent(
+			@FormParam("Spielzeitaum") DType spielzeitraum,
+			@FormParam("Event-ID") BigInteger eventID, // die ID ist ein
+														// Attribut, ist es
+														// trotzdem richtig so?
 			@FormParam("Sportart") SType sportart,
 			@FormParam("Oertlichkeit") OType oertlichkeit,
 			@FormParam("Spielerliste") SlType spielerliste,
@@ -72,33 +91,34 @@ public class eventsresource {
 		veranstaltung.setSpielerliste(spielerliste);
 		veranstaltung.setBacklist(blacklist);
 		veranstaltung.setAdmin(admin);
-		
-		URI location = addevent(veranstaltung); 
-		
+
+		URI location = addevent(veranstaltung);
+
 		return Response.created(location).build();
 
 	}
-	
+
 	@OPTIONS
 	public Response optionsOptions() {
-		return Response.ok().
-			header("Allow-Control-Allow-Methods", "POST,GET,OPTIONS").
-			header("Access-Control-Allow-Origin", "*").build();
+		return Response.ok()
+				.header("Allow-Control-Allow-Methods", "POST,GET,OPTIONS")
+				.header("Access-Control-Allow-Origin", "*").build();
 	}
-	
-	private URI addevent(EType event){
+
+	private URI addevent(EType event) {
 		System.out.println("DEBUG: adding new event ("
 				+ event.getSpielzeitraum() + ", " + event.getSportart() + ", "
-				+ event.getOertlichkeit() + ", " + event.getSpielerliste() + ", "
-						+ event.getBacklist() + ", " + event.getAdmin() + ")");
+				+ event.getOertlichkeit() + ", " + event.getSpielerliste()
+				+ ", " + event.getBacklist() + ", " + event.getAdmin() + ")");
 		int index = events.getEvent().size();
 
 		event.setEventID(BigInteger.valueOf(index));
-		
-		URI location = uriInfo.getAbsolutePathBuilder().path("" + index).build();
+
+		URI location = uriInfo.getAbsolutePathBuilder().path("" + index)
+				.build();
 
 		events.getEvent().add(event);
-		
+
 		return location;
 	}
 
