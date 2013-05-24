@@ -32,9 +32,19 @@
 
 	<xs:complexType name="oType">
 		<xs:sequence>
+			<xs:element name="Ort" type="xs:string" />
 			<xs:element name="Platz" type="xs:string" />
 			<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
 			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
+			<xs:element name="Oeffnungszeiten">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="geoeffnet_von" type="xs:time" />
+						<xs:element name="geoeffnet_bis" type="xs:time" />
+						<xs:element name="geschlossen_an" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="Preis">
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
@@ -44,6 +54,7 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+
 
 	<xs:complexType name="dType">
 		<xs:sequence>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<accounts maxOccurs="unbounded">
+
+	<Spieler>
+		<Anzeigename>Michael</Anzeigename>
+		<Telefonnummer>3456</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Georg</Anzeigename>
+		<Telefonnummer>4567</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Fabian</Anzeigename>
+		<Telefonnummer>5678</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Petra</Anzeigename>
+		<Telefonnummer>6789</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Ulric</Anzeigename>
+		<Telefonnummer>1596</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Werner</Anzeigename>
+		<Telefonnummer>4125</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Klaus</Anzeigename>
+		<Telefonnummer>13456</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Gregor</Anzeigename>
+		<Telefonnummer>45671</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Fabian</Anzeigename>
+		<Telefonnummer>56781</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Steven</Anzeigename>
+		<Telefonnummer>67891</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Patrick</Anzeigename>
+		<Telefonnummer>15964</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Oli</Anzeigename>
+		<Telefonnummer>41125</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Hans</Anzeigename>
+		<Telefonnummer>12345</Telefonnummer>
+	</Spieler>
+
+	<Spieler>
+		<Anzeigename>Peter</Anzeigename>
+		<Telefonnummer>01234</Telefonnummer>
+	</Spieler>
+
+</accounts>

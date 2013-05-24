@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<Plaetze maxOccurs="unbounded">
+	<Oertlichkeit>
+		<Platz>Gummersbach Sportplatz</Platz>
+		<min.Spieleranzahl>6</min.Spieleranzahl>
+		<max.Spieleranzahl>22</max.Spieleranzahl>
+		<Preis>0</Preis>
+	</Oertlichkeit>
+	<Oertlichkeit>
+		<Platz>Gummersbach Sportplatz</Platz>
+		<min.Spieleranzahl>6</min.Spieleranzahl>
+		<max.Spieleranzahl>22</max.Spieleranzahl>
+		<Preis>0</Preis>
+	</Oertlichkeit>
+	<Oertlichkeit>
+		<Platz>Gummersbach Sportplatz</Platz>
+		<min.Spieleranzahl>6</min.Spieleranzahl>
+		<max.Spieleranzahl>22</max.Spieleranzahl>
+		<Preis>0</Preis>
+	</Oertlichkeit>
+	<Oertlichkeit>
+		<Platz>Gummersbach Sportplatz</Platz>
+		<min.Spieleranzahl>6</min.Spieleranzahl>
+		<max.Spieleranzahl>22</max.Spieleranzahl>
+		<Preis>0</Preis>
+	</Oertlichkeit>
+	<Oertlichkeit>
+		<Platz>Gummersbach Sportplatz</Platz>
+		<min.Spieleranzahl>6</min.Spieleranzahl>
+		<max.Spieleranzahl>22</max.Spieleranzahl>
+		<Preis>0</Preis>
+	</Oertlichkeit>
+</Plaetze>

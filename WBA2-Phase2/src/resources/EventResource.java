@@ -1,5 +1,7 @@
 package resources;
 
+import java.math.BigInteger;
+import java.net.URI;
 import java.util.List;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,9 +21,25 @@ public class EventResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public EType getEventInfos(int ID) {
+	public EType getEventInfos() {
 		return this.event;
 	}
 
+	@PUT
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response postSpielerliste(
+			@FormParam("Spielerliste") SlType spielerliste) {
+		SlType sliste = new SlType();
+		EType veranstaltung =new EType();
+		
+		veranstaltung.setSpielerliste(sliste);
+		
+		
+
+		URI location = addevent(veranstaltung);
+
+		return Response.created(location).build();
+
+	}
 
 }
