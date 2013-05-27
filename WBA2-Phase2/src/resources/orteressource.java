@@ -1,5 +1,7 @@
 package resources;
 
+import helper.marsh;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +9,17 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.xml.sax.SAXException;
+
+import jaxb.EventsType;
 import jaxb.OType;
 import jaxb.OrteType;
 
@@ -23,26 +31,16 @@ import jaxb.OrteType;
 public class orteressource {
 
 	
+public marsh xml;
 	
-	public orteressource() throws Exception {
-		String xmlorte = "../orte.xml";
+	public orteressource() throws JAXBException {
+		this.xml = new marsh();
+}
+	
 
-		JAXBContext context = JAXBContext.newInstance(OrteType.class);
-		Unmarshaller u = context.createUnmarshaller();
-
-		OrteType orteliste = (OrteType) u.unmarshal(
-				new StreamSource(new File(xmlorte)), OrteType.class)
-				.getValue();
-		ArrayList<OType> oliste = (ArrayList<OType>) orteliste.getOrt();
-	}
-	
-	
-	
-	public static OrteType orte = new OrteType();
-	
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public List<OType> getAccounts() {
-		return orte.getOrt();
+	public OrteType getOrte() throws JAXBException, SAXException{
+		return this.xml.unmarshalOrt();
 	}
 }

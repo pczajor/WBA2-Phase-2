@@ -1,5 +1,6 @@
 package resources;
 
+import helper.marsh;
 import jaxb.*;
 
 import java.io.File;
@@ -22,35 +23,30 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
+
+import org.xml.sax.SAXException;
 
 import com.sun.jersey.api.NotFoundException;
 
 @Path("recources/events")
 public class eventsresource {
 
-	public eventsresource() throws Exception {
-		String xmlevents = "../Events.xml";
-
-		JAXBContext context = JAXBContext.newInstance(EventsType.class);
-		Unmarshaller u = context.createUnmarshaller();
-
-		EventsType eventliste = (EventsType) u.unmarshal(
-				new StreamSource(new File(xmlevents)), EventsType.class)
-				.getValue();
-		ArrayList<EType> eliste = (ArrayList<EType>) eventliste.getEvent();
-	}
-
-	public static EventsType events = new EventsType();
-
+public marsh xml;
+	
+	public eventsresource() throws JAXBException {
+		this.xml = new marsh();
+}
+	
 	@Context
 	UriInfo uriInfo;
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public List<EType> getEvents() {
-		return events.getEvent();
+	public EventsType getEvents() throws JAXBException, SAXException{
+		return this.xml.unmarshalEvent();
 	}
 
 	@POST
