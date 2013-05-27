@@ -1,8 +1,5 @@
 package resources;
 
-import Rezepte;
-import generated.RType;
-import generated.RezepteType;
 import jaxb.*;
 
 import java.io.File;
@@ -30,19 +27,19 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.sun.jersey.api.NotFoundException;
 
-@Path("recources")
+@Path("recources/events")
 public class eventsresource {
 
 	public eventsresource() throws Exception {
-		String xmlDatei = "../Events.xml";
+		String xmlevents = "../Events.xml";
 
 		JAXBContext context = JAXBContext.newInstance(EventsType.class);
 		Unmarshaller u = context.createUnmarshaller();
 
 		EventsType eventliste = (EventsType) u.unmarshal(
-				new StreamSource(new File(xmlDatei)), EventsType.class)
+				new StreamSource(new File(xmlevents)), EventsType.class)
 				.getValue();
-		ArrayList<EType> liste = (ArrayList<EType>) eventliste.getEvent();
+		ArrayList<EType> eliste = (ArrayList<EType>) eventliste.getEvent();
 	}
 
 	public static EventsType events = new EventsType();

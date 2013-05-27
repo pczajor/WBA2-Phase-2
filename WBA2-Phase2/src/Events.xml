@@ -8,13 +8,19 @@
 			<von>2013-05-20T17:00:00+01:00</von>
 			<bis>2013-05-20T19:00:00+01:00</bis>
 		</Spielzeitraum>
-		
+
 		<Sportart>Fußball</Sportart>
-		
+
 		<Oertlichkeit>
+			<Ort>Gummersbach</Ort>
 			<Platz>Gummersbach Sportplatz</Platz>
 			<min.Spieleranzahl>6</min.Spieleranzahl>
 			<max.Spieleranzahl>22</max.Spieleranzahl>
+			<Oeffnungszeiten>
+				<geoeffnet_von>09:00:00</geoeffnet_von>
+				<geoeffnet_bis>22:00:00</geoeffnet_bis>
+				<geschlossen_an>Sonntag</geschlossen_an>
+			</Oeffnungszeiten>
 			<Preis>0</Preis>
 		</Oertlichkeit>
 
@@ -44,14 +50,14 @@
 				<Telefonnummer>4125</Telefonnummer>
 			</Spieler>
 		</Spielerliste>
-		
+
 		<Blacklist>
 			<Spieler subadmin="false">
 				<Anzeigename>Hans</Anzeigename>
 				<Telefonnummer>12345</Telefonnummer>
 			</Spieler>
 		</Blacklist>
-		
+
 		<Admin>
 			<Anzeigename>Peter</Anzeigename>
 			<Telefonnummer>01234</Telefonnummer>

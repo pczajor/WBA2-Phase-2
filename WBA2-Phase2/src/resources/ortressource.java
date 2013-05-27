@@ -12,19 +12,19 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import jaxb.SpielerType;
+import jaxb.OType;
 
 
 
-@Path("recources/accounts/")
-public class spielerresource {
+@Path("recources/orte/")
+public class ortressource {
 	
 	
-	public SpielerType spieler = new SpielerType();
+	public OType ort = new OType();
 	
-	public spielerresource(SpielerType spieler) {
+	public ortressource(OType ort) {
 			super();
-			this.spieler = spieler;
+			this.ort = ort;
 	}
 		
 		
@@ -32,8 +32,8 @@ public class spielerresource {
 		@GET
 		@Path("{id}")
 		@Produces(MediaType.APPLICATION_XML)
-		public SpielerType getSpielerInfo(@PathParam("id") String telefonnummer) {
-			return this.spieler;
+		public OType getSpielerInfo(@PathParam("id") String platz) {
+			return this.ort;
 		
 	}
 

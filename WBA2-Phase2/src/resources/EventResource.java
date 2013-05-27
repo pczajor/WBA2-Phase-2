@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 
 import jaxb.*;
 
-@Path("resources")
+@Path("resources/events/")
 public class EventResource {
 
 	private EType event = new EType();
@@ -20,8 +20,9 @@ public class EventResource {
 	}
 
 	@GET
+	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public EType getEventInfos() {
+	public EType getEventInfos(@PathParam("id") BigInteger EventID) {
 		return this.event;
 	}
 
