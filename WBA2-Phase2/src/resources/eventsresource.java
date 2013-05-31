@@ -4,7 +4,9 @@ import helper.marsh;
 import jaxb.*;
 
 import java.io.File;
-import java.math.BigInteger;
+import java.io.FileNotFoundException;
+import java.math.*;
+import java.lang.Number;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,94 +28,77 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.SAXException;
 
 import com.sun.jersey.api.NotFoundException;
 
+import jaxb.EType;
+import jaxb.EventsType;
+import jaxb.SlType;
+import jaxb.SpielerType;
+
 @Path("recources/events")
 public class eventsresource {
 
-public marsh xml;
-	
+	public marsh xml;
+
 	public eventsresource() throws JAXBException {
 		this.xml = new marsh();
-}
-	
-	@Context
-	UriInfo uriInfo;
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public EventsType getEvents() throws JAXBException, SAXException{
+	public EventsType getEvents() throws JAXBException, SAXException {
 		return this.xml.unmarshalEvent();
 	}
 
-	@POST
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response postevent(EType event) {
-		URI location = addevent(event);
-
-		return Response.created(location).build();
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response postevent(
-			@FormParam("Spielzeitaum") DType spielzeitraum,
-			@FormParam("Event-ID") BigInteger eventID, // die ID ist ein
-														// Attribut, ist es
-														// trotzdem richtig so?
-			@FormParam("Sportart") SType sportart,
-			@FormParam("Oertlichkeit") OType oertlichkeit,
-			@FormParam("Spielerliste") SlType spielerliste,
-			@FormParam("Blacklist") BType blacklist,
-			@FormParam("Admin") SpielerType admin) {
-		if (spielzeitraum == null || sportart == null || oertlichkeit == null
-				|| admin == null) {
-			throw new WebApplicationException(
-					Response.status(400)
-							.entity("Event konnte nicht angelegt werden, da wichtige Informationen fehlen.")
-							.build());
-		}
+	@GET
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_XML)
+	public EventsType getUser(@PathParam("id") BigInteger eventID)
+			throws JAXBException {
 		EType veranstaltung = new EType();
 
-		veranstaltung.setSpielzeitraum(spielzeitraum);
-		veranstaltung.setSportart(sportart);
-		veranstaltung.setOertlichkeit(oertlichkeit);
-		veranstaltung.setSpielerliste(spielerliste);
-		veranstaltung.setBacklist(blacklist);
-		veranstaltung.setAdmin(admin);
+		EventsType returnEvent = new EventsType();
+		EventsType events = this.xml.unmarshalEvent();
 
-		URI location = addevent(veranstaltung);
+		int paramId = BigInteger.intValue(eventID);
+		for (EType each : events.getEvent()) {
+			if (BigInteger.intValue(each.getEventID()) == paramId) {
+				veranstaltung = each;
 
-		return Response.created(location).build();
+				returnEvent.getEvent().add(veranstaltung);
 
+				return returnEvent;
+			}
+		}
 	}
+	
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_XML)
+	public void setEvent(EventsType temp) throws JAXBException,
+			FileNotFoundException, SAXException, DatatypeConfigurationException {
+		EventsType veranstaltungen = this.xml.unmarshalEvent();
+		int index = 0;
+		boolean achive = false;
+		int queryId = BigInteger.intValue(temp.getEvent().get(0)
+				.getEventID());
+		for (EType use : veranstaltungen.getEvent()) {
+			if (BigInteger.intValue(use.getEventID()) == queryId) {
+				index = veranstaltungen.getEvent().indexOf(use);
+				achive = true;
+			}
+		}
 
-	@OPTIONS
-	public Response optionsOptions() {
-		return Response.ok()
-				.header("Allow-Control-Allow-Methods", "POST,GET,OPTIONS")
-				.header("Access-Control-Allow-Origin", "*").build();
+		if (achive) {
+			veranstaltungen.getEvent().set(index, temp.getEvent().get(0));
+		} else {
+			System.out.printf("Fehler, Spieler nicht gefunden!");
+		}
+		this.xml.marshalEvent(veranstaltungen );
 	}
-
-	private URI addevent(EType event) {
-		System.out.println("DEBUG: adding new event ("
-				+ event.getSpielzeitraum() + ", " + event.getSportart() + ", "
-				+ event.getOertlichkeit() + ", " + event.getSpielerliste()
-				+ ", " + event.getBacklist() + ", " + event.getAdmin() + ")");
-		int index = events.getEvent().size();
-
-		event.setEventID(BigInteger.valueOf(index));
-
-		URI location = uriInfo.getAbsolutePathBuilder().path("" + index)
-				.build();
-
-		events.getEvent().add(event);
-
-		return location;
-	}
-
 }
