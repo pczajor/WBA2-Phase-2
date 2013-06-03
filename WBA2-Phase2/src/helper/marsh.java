@@ -3,8 +3,6 @@ package helper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -50,7 +48,7 @@ public class marsh {
 		return eventliste;
 	}
 	
-	public void marshalEvent(EType e) throws JAXBException, SAXException, FileNotFoundException{
+	public void marshalEvent(EventsType e) throws JAXBException, SAXException, FileNotFoundException{
 		Marshaller mar = event.createMarshaller();
 		mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		FileOutputStream file = new FileOutputStream("../events.xml");

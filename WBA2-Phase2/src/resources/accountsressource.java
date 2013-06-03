@@ -2,10 +2,7 @@ package resources;
 
 import helper.marsh;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,16 +13,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.transform.stream.StreamSource;
-
-import org.xml.sax.SAXException;
 
 import jaxb.SlType;
 import jaxb.SpielerType;
+
+import org.xml.sax.SAXException;
 
 @Path("recources/accounts")
 public class accountsressource {
@@ -45,7 +39,7 @@ public class accountsressource {
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public SlType getUser(@PathParam("id") String telefonnummer)
+	public SlType getSpieler(@PathParam("id") String telefonnummer)
 			throws JAXBException {
 		SpielerType spieler = new SpielerType();
 
@@ -53,9 +47,9 @@ public class accountsressource {
 		SlType accounts = this.xml.unmarshalSpieler();
 
 		int paramId = Integer.parseInt(telefonnummer);
-		for (SpielerType use : accounts.getSpieler()) {
-			if (Integer.parseInt(use.getTelefonnummer()) == paramId) {
-				spieler = use;
+		for (SpielerType each : accounts.getSpieler()) {
+			if (Integer.parseInt(each.getTelefonnummer()) == paramId) {
+				spieler = each;
 
 				returnSpieler.getSpieler().add(spieler);
 
@@ -89,4 +83,37 @@ public class accountsressource {
 		}
 		this.xml.marshalSpieler(accounts);
 	}
+	@POST
+	// @Path("post")
+	@Consumes(MediaType.APPLICATION_XML)
+	public void createSpieler(SlType s) throws JAXBException,
+			FileNotFoundException, SAXException, DatatypeConfigurationException {
+		SlType accounts = this.xml.unmarshalSpieler();
+		SlType accountList = new SlType();
+
+		s.getSpieler().get(0).setTelefonnummer(this.xml.unmarshalSpieler().getSpieler().get(0).getTelefonnummer()); //id=telefonnummer=String... in xml?richtig?
+
+		accountList.getSpieler().add(s.getSpieler().get(0));
+		for (SpielerType each : accounts.getSpieler()) {
+			accountList.getSpieler().add(each);
+		}
+		this.xml.marshalSpieler(accountList);
+	}
+
+	@DELETE
+	@Path("del/{id}")
+	public void deleteSpieler(@PathParam("id") String telefonnummer) throws JAXBException,
+			FileNotFoundException, SAXException {
+		int paramId = Integer.parseInt(telefonnummer);
+		SlType spieler = this.xml.unmarshalSpieler();
+		for (SpielerType each : spieler.getSpieler()) {
+			if (Integer.parseInt(each.getTelefonnummer()) == paramId) {
+				spieler.getSpieler().remove(each);
+				break;
+			}
+		}
+		this.xml.marshalSpieler(spieler);
+	}
+
 }
+
