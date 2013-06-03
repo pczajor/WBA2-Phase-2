@@ -21,7 +21,7 @@ import jaxb.SpielerType;
 
 import org.xml.sax.SAXException;
 
-@Path("recources/accounts")
+@Path("accounts")
 public class accountsressource {
 
 	public marsh xml;
@@ -101,7 +101,7 @@ public class accountsressource {
 	}
 
 	@DELETE
-	@Path("del/{id}")
+	@Path("{id}")
 	public void deleteSpieler(@PathParam("id") String telefonnummer) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = Integer.parseInt(telefonnummer);

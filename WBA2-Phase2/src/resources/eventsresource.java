@@ -22,7 +22,7 @@ import jaxb.EventsType;
 
 import org.xml.sax.SAXException;
 
-@Path("recources/events")
+@Path("events")
 public class eventsresource {
 
 	public marsh xml;
@@ -102,7 +102,7 @@ public class eventsresource {
 	}
 
 	@DELETE
-	@Path("del/{id}")
+	@Path("{id}")
 	public void deleteEvent(@PathParam("id") BigInteger eventID) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = eventID.intValue();

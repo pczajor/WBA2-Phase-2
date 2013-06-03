@@ -36,7 +36,7 @@ import jaxb.OrteType;
 
 
 
-@Path("recources/orte")
+@Path("orte")
 public class orteressource {
 
 	
@@ -118,7 +118,7 @@ public marsh xml;
 	}
 
 	@DELETE
-	@Path("del/{id}")
+	@Path("{id}")
 	public void deleteOrt(@PathParam("id") String platz) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = Integer.parseInt(platz);
