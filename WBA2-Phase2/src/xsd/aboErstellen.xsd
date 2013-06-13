@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<!-- Zeitlicht Abfolge? -->
-	<xs:element name="event" type="eType" />
 
-	<xs:complexType name="eType">
+<xs:element name="abo" type="eType"/>
+
+<xs:complexType name="eType">
 		<xs:sequence>
 			<xs:element name="Spielzeitraum" type="dType" />
 			<xs:element name="Sportart" type="sType" />
 			<xs:element name="Oertlichkeit" type="oType" />
-			<xs:element name="Spielerliste" type="slType" />
-			<xs:element name="Backlist" type="bType" />
-			<xs:element name="Admin" type="spielerType" />
+			<xs:element name="Backlist" type="bType" /> <!-- auf dem client? -->
 		</xs:sequence>
-		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
 	</xs:complexType>
 
 	<xs:simpleType name="sType">
@@ -23,20 +20,13 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:complexType name="slType">
-		<xs:sequence>
-			<xs:element name="Spieler" type="spielerType" />
-		</xs:sequence>
-		<xs:attribute name="min.Spieler" type="xs:positiveInteger" /> <!-- richtig so?? -->
-		<xs:attribute name="max.Spieler" type="xs:positiveInteger" />
-	</xs:complexType>
 
 	<xs:complexType name="spielerType">
 		<xs:sequence>
 			<xs:element name="Anzeigename" type="xs:string" />
 			<xs:element name="Telefonnummer" type="xs:string" />
 		</xs:sequence>
-		<xs:attribute name="subAdmin" type="xs:boolean" />
+		<xs:attribute name="subAdmin" type="xs:boolean"/>
 	</xs:complexType>
 
 	<xs:complexType name="bType">
@@ -47,9 +37,19 @@
 
 	<xs:complexType name="oType">
 		<xs:sequence>
+			<xs:element name="Ort" type="xs:string" />
 			<xs:element name="Platz" type="xs:string" />
 			<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
 			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
+			<xs:element name="Oeffnungszeiten">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="geoeffnet_von" type="xs:time" />
+						<xs:element name="geoeffnet_bis" type="xs:time" />
+						<xs:element name="geschlossen_an" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="Preis">
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
@@ -60,13 +60,13 @@
 		</xs:sequence>
 	</xs:complexType>
 
+
 	<xs:complexType name="dType">
 		<xs:sequence>
 			<xs:element name="von" type="xs:dateTime" />
 			<xs:element name="bis" type="xs:dateTime" />
 		</xs:sequence>
 	</xs:complexType>
-
 
 
 

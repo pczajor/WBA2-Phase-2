@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<!-- in filter trennen, so wie in spieler hinzufügen -->
-<xs:element name="event" type="eType" />
+
+	<xs:element name="event" type="eType" />
 
 	<xs:complexType name="eType">
 		<xs:sequence>
+																			 <!-- Sportart mintangeben? bei gemischten plätzen? -->
 			<xs:element name="Spielzeitraum" type="dType" />
-			<xs:element name="Sportart" type="sType" />
-			<xs:element name="Oertlichkeit" type="oType" />
+			<xs:element name="Oertlichkeit" type="oType" />					<!-- Örtlichkeit zur überprüfung? -->
 			<xs:element name="Spielerliste" type="slType" />
-			<xs:element name="Backlist" type="bType" />
 			<xs:element name="Admin" type="spielerType" />
 		</xs:sequence>
 		<xs:attribute name="Event-ID" type="xs:positiveInteger" />
 	</xs:complexType>
 
-	<xs:simpleType name="sType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Fußball" />
-			<xs:enumeration value="Basketball" />
-			<xs:enumeration value="Tennis" />
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:complexType name="slType">
 		<xs:sequence>
-			<xs:element name="Spieler" type="spielerType"/>
+			<xs:element name="Spieler" type="spielerType" />
 		</xs:sequence>
-		<xs:attribute name="min.Spieler" type="xs:positiveInteger"/> <!--  richtig so?? -->
-		<xs:attribute name="max.Spieler" type="xs:positiveInteger"/>
+		<xs:attribute name="min.Spieler" type="xs:positiveInteger" /> <!-- richtig so?? -->
+		<xs:attribute name="max.Spieler" type="xs:positiveInteger" />
 	</xs:complexType>
 
 	<xs:complexType name="spielerType">
@@ -36,20 +27,24 @@
 			<xs:element name="Anzeigename" type="xs:string" />
 			<xs:element name="Telefonnummer" type="xs:string" />
 		</xs:sequence>
-		<xs:attribute name="subAdmin" type="xs:boolean"/>
-	</xs:complexType>
-
-	<xs:complexType name="bType">
-		<xs:sequence>
-			<xs:element name="Spieler" type="spielerType" maxOccurs="unbounded" />
-		</xs:sequence>
+		<xs:attribute name="subAdmin" type="xs:boolean" />
 	</xs:complexType>
 
 	<xs:complexType name="oType">
 		<xs:sequence>
+			<xs:element name="Ort" type="xs:string" />
 			<xs:element name="Platz" type="xs:string" />
 			<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
 			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
+			<xs:element name="Oeffnungszeiten">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="geoeffnet_von" type="xs:time" />
+						<xs:element name="geoeffnet_bis" type="xs:time" />
+						<xs:element name="geschlossen_an" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="Preis">
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
@@ -60,12 +55,15 @@
 		</xs:sequence>
 	</xs:complexType>
 
+
 	<xs:complexType name="dType">
 		<xs:sequence>
 			<xs:element name="von" type="xs:dateTime" />
 			<xs:element name="bis" type="xs:dateTime" />
 		</xs:sequence>
 	</xs:complexType>
+
+
 
 
 </xs:schema>

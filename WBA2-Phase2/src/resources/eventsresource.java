@@ -1,122 +1,127 @@
 package resources;
 
-import jaxb.*;
+import helper.marsh;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeConfigurationException;
 
-import com.sun.jersey.api.NotFoundException;
+import jaxb.EType;
+import jaxb.EventsType;
 
-@Path("recources/events")
+import org.xml.sax.SAXException;
+
+@Path("events")
 public class eventsresource {
 
-	public eventsresource() throws Exception {
-		String xmlevents = "../Events.xml";
+	public marsh xml;
 
-		JAXBContext context = JAXBContext.newInstance(EventsType.class);
-		Unmarshaller u = context.createUnmarshaller();
-
-		EventsType eventliste = (EventsType) u.unmarshal(
-				new StreamSource(new File(xmlevents)), EventsType.class)
-				.getValue();
-		ArrayList<EType> eliste = (ArrayList<EType>) eventliste.getEvent();
+	public eventsresource() throws JAXBException {
+		this.xml = new marsh();
 	}
-
-	public static EventsType events = new EventsType();
-
-	@Context
-	UriInfo uriInfo;
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public List<EType> getEvents() {
-		return events.getEvent();
+	public EventsType getEvents() throws JAXBException, SAXException {
+		return this.xml.unmarshalEvent();
 	}
 
-	@POST
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response postevent(EType event) {
-		URI location = addevent(event);
-
-		return Response.created(location).build();
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response postevent(
-			@FormParam("Spielzeitaum") DType spielzeitraum,
-			@FormParam("Event-ID") BigInteger eventID, // die ID ist ein
-														// Attribut, ist es
-														// trotzdem richtig so?
-			@FormParam("Sportart") SType sportart,
-			@FormParam("Oertlichkeit") OType oertlichkeit,
-			@FormParam("Spielerliste") SlType spielerliste,
-			@FormParam("Blacklist") BType blacklist,
-			@FormParam("Admin") SpielerType admin) {
-		if (spielzeitraum == null || sportart == null || oertlichkeit == null
-				|| admin == null) {
-			throw new WebApplicationException(
-					Response.status(400)
-							.entity("Event konnte nicht angelegt werden, da wichtige Informationen fehlen.")
-							.build());
-		}
+	@GET
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_XML)
+	public EventsType getEvent(@PathParam("id") BigInteger eventID)
+			throws JAXBException {
 		EType veranstaltung = new EType();
 
-		veranstaltung.setSpielzeitraum(spielzeitraum);
-		veranstaltung.setSportart(sportart);
-		veranstaltung.setOertlichkeit(oertlichkeit);
-		veranstaltung.setSpielerliste(spielerliste);
-		veranstaltung.setBacklist(blacklist);
-		veranstaltung.setAdmin(admin);
+		EventsType returnEvent = new EventsType();
+		EventsType events = this.xml.unmarshalEvent();
 
-		URI location = addevent(veranstaltung);
+		int paramId = eventID.intValue();
+		for (EType each : events.getEvent()) {
+			if (each.getEventID().intValue() == paramId) { // (each.getEventID().intValue()
+															// == paramId)
+				veranstaltung = each;
 
-		return Response.created(location).build();
+				returnEvent.getEvent().add(veranstaltung);
 
+				return returnEvent;
+			}
+		}
+		return events;
 	}
 
-	@OPTIONS
-	public Response optionsOptions() {
-		return Response.ok()
-				.header("Allow-Control-Allow-Methods", "POST,GET,OPTIONS")
-				.header("Access-Control-Allow-Origin", "*").build();
+	@PUT
+	@Consumes(MediaType.APPLICATION_XML)
+	public void setEvent(EventsType temp) throws JAXBException,
+			FileNotFoundException, SAXException, DatatypeConfigurationException {
+		EventsType veranstaltungen = this.xml.unmarshalEvent();
+		int index = 0;
+		boolean achive = false;
+		int queryId = temp.getEvent().get(0).getEventID().intValue();
+		for (EType each : veranstaltungen.getEvent()) {
+			if (each.getEventID().intValue() == queryId) {
+				index = veranstaltungen.getEvent().indexOf(each);
+				achive = true;
+			}
+		}
+
+		if (achive) {
+			veranstaltungen.getEvent().set(index, temp.getEvent().get(0));
+		} else {
+			System.out.printf("Fehler, Event nicht gefunden!");
+		}
+		this.xml.marshalEvent(veranstaltungen);
 	}
 
-	private URI addevent(EType event) {
-		System.out.println("DEBUG: adding new event ("
-				+ event.getSpielzeitraum() + ", " + event.getSportart() + ", "
-				+ event.getOertlichkeit() + ", " + event.getSpielerliste()
-				+ ", " + event.getBacklist() + ", " + event.getAdmin() + ")");
-		int index = events.getEvent().size();
+	@POST
+	// @Path("post")
+	@Consumes(MediaType.APPLICATION_XML)
+	public void createEvent(EventsType e) throws JAXBException,
+			FileNotFoundException, SAXException, DatatypeConfigurationException {
+		EventsType events = this.xml.unmarshalEvent();
+		EventsType eventList = new EventsType();
 
-		event.setEventID(BigInteger.valueOf(index));
+		e.getEvent().get(0).setEventID(BigInteger.valueOf(getNextId()));
 
-		URI location = uriInfo.getAbsolutePathBuilder().path("" + index)
-				.build();
-
-		events.getEvent().add(event);
-
-		return location;
+		eventList.getEvent().add(e.getEvent().get(0));
+		for (EType each : events.getEvent()) {
+			eventList.getEvent().add(each);
+		}
+		this.xml.marshalEvent(eventList);
 	}
 
+	@DELETE
+	@Path("{id}")
+	public void deleteEvent(@PathParam("id") BigInteger eventID) throws JAXBException,
+			FileNotFoundException, SAXException {
+		int paramId = eventID.intValue();
+		EventsType events = this.xml.unmarshalEvent();
+		for (EType each : events.getEvent()) {
+			if (each.getEventID().intValue() == paramId) {
+				events.getEvent().remove(each);
+				break;
+			}
+		}
+		this.xml.marshalEvent(events);
+	}
+
+	public int getNextId() throws JAXBException {
+		int count = this.xml.unmarshalEvent().getEvent().get(0).getEventID()
+				.intValue();
+		count++;
+
+		return count;
+
+	}
 }
