@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Events xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="event.xsd">
+  <event>
+    <Spielzeitraum>
+      <von>2001-12-31T12:00:00</von>
+      <bis>2001-12-31T12:00:00</bis>
+    </Spielzeitraum>
+    <Sportart>Fußball</Sportart>
+    <Oertlichkeit>
+      <Ort>Ort</Ort>
+      <Platz>Platz</Platz>
+      <min.Spieleranzahl>1</min.Spieleranzahl>
+      <max.Spieleranzahl>1</max.Spieleranzahl>
+      <Oeffnungszeiten>
+        <geoeffnet_von>12:00:00</geoeffnet_von>
+        <geoeffnet_bis>12:00:00</geoeffnet_bis>
+        <geschlossen_an>geschlossen_an</geschlossen_an>
+      </Oeffnungszeiten>
+      <Preis>0.0</Preis>
+    </Oertlichkeit>
+    <Spielerliste>
+      <Spieler>
+        <Anzeigename>Anzeigename</Anzeigename>
+        <Telefonnummer>Telefonnummer</Telefonnummer>
+      </Spieler>
+    </Spielerliste>
+    <Backlist>
+      <Spieler>
+        <Anzeigename>Anzeigename</Anzeigename>
+        <Telefonnummer>Telefonnummer</Telefonnummer>
+      </Spieler>
+    </Backlist>
+    <Admin>
+      <Anzeigename>Anzeigename</Anzeigename>
+      <Telefonnummer>Telefonnummer</Telefonnummer>
+    </Admin>
+  </event>
+</Events>

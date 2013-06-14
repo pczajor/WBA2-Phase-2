@@ -16,8 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import jaxb.SlType;
-import jaxb.SpielerType;
+import jaxb.Accountliste;
 
 import org.xml.sax.SAXException;
 
@@ -32,7 +31,7 @@ public class accountsressource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public SlType getAccounts() throws JAXBException, SAXException {
+	public Accountliste getAccounts() throws JAXBException, SAXException {
 			return this.xml.unmarshalSpieler();
 		
 	}
@@ -40,15 +39,15 @@ public class accountsressource {
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public SlType getSpieler(@PathParam("id") String telefonnummer)
+	public Accountliste getSpieler(@PathParam("id") String telefonnummer)
 			throws JAXBException {
-		SpielerType spieler = new SpielerType();
+		Accountliste.Spieler spieler = new Accountliste.Spieler();
 
-		SlType returnSpieler = new SlType();
-		SlType accounts = this.xml.unmarshalSpieler();
+		Accountliste returnSpieler = new Accountliste();
+		Accountliste accounts = this.xml.unmarshalSpieler();
 
 		int paramId = Integer.parseInt(telefonnummer);
-		for (SpielerType each : accounts.getSpieler()) {
+		for (Accountliste.Spieler each : accounts.getSpieler()) {
 			if (Integer.parseInt(each.getTelefonnummer()) == paramId) {
 				spieler = each;
 
@@ -63,14 +62,14 @@ public class accountsressource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
-	public void setSpieler(SlType temp) throws JAXBException,
+	public void setSpieler(Accountliste temp) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		SlType accounts = this.xml.unmarshalSpieler();
+		Accountliste accounts = this.xml.unmarshalSpieler();
 		int index = 0;
 		boolean achive = false;
 		int queryId = Integer.parseInt(temp.getSpieler().get(0)
 				.getTelefonnummer());
-		for (SpielerType use : accounts.getSpieler()) {
+		for (Accountliste.Spieler use : accounts.getSpieler()) {
 			if (Integer.parseInt(use.getTelefonnummer()) == queryId) {
 				index = accounts.getSpieler().indexOf(use);
 				achive = true;
@@ -87,15 +86,15 @@ public class accountsressource {
 	@POST
 	// @Path("post")
 	@Consumes(MediaType.APPLICATION_XML)
-	public void createSpieler(SlType s) throws JAXBException,
+	public void createSpieler(Accountliste s) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		SlType accounts = this.xml.unmarshalSpieler();
-		SlType accountList = new SlType();
+		Accountliste accounts = this.xml.unmarshalSpieler();
+		Accountliste accountList = new Accountliste();
 
 		s.getSpieler().get(0).setTelefonnummer(this.xml.unmarshalSpieler().getSpieler().get(0).getTelefonnummer()); //id=telefonnummer=String... in xml?richtig?
 
 		accountList.getSpieler().add(s.getSpieler().get(0));
-		for (SpielerType each : accounts.getSpieler()) {
+		for (Accountliste.Spieler each : accounts.getSpieler()) {
 			accountList.getSpieler().add(each);
 		}
 		this.xml.marshalSpieler(accountList);
@@ -106,8 +105,8 @@ public class accountsressource {
 	public void deleteSpieler(@PathParam("id") String telefonnummer) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = Integer.parseInt(telefonnummer);
-		SlType spieler = this.xml.unmarshalSpieler();
-		for (SpielerType each : spieler.getSpieler()) {
+		Accountliste spieler = this.xml.unmarshalSpieler();
+		for (Accountliste.Spieler each : spieler.getSpieler()) {
 			if (Integer.parseInt(each.getTelefonnummer()) == paramId) {
 				spieler.getSpieler().remove(each);
 				break;

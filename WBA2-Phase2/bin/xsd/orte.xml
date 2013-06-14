@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Orteliste xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="orte.xsd">
+  <Ort>
+    <Ort>Ort</Ort>
+    <Platz>Platz</Platz>
+    <min.Spieleranzahl>1</min.Spieleranzahl>
+    <max.Spieleranzahl>1</max.Spieleranzahl>
+    <Oeffnungszeiten>
+      <geoeffnet_von>12:00:00</geoeffnet_von>
+      <geoeffnet_bis>12:00:00</geoeffnet_bis>
+      <geschlossen_an>geschlossen_an</geschlossen_an>
+    </Oeffnungszeiten>
+    <Preis>0.0</Preis>
+  </Ort>
+</Orteliste>

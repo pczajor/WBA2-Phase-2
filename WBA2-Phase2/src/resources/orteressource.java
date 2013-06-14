@@ -16,8 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import jaxb.OType;
-import jaxb.OrteType;
+import jaxb.Orteliste;
 
 import org.xml.sax.SAXException;
 
@@ -37,23 +36,23 @@ public marsh xml;
 	
 
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	public OrteType getOrte() throws JAXBException, SAXException{
+	@Produces("application/xml")
+	public Orteliste getOrte() throws JAXBException, SAXException{
 		return this.xml.unmarshalOrt();
 	}
 
 	@GET
 	@Path("{id}")
-	@Produces(MediaType.APPLICATION_XML)
-	public OrteType getOrt(@PathParam("id") String platz)
+	@Produces("application/xml")
+	public Orteliste getOrt(@PathParam("id") String platz)
 			throws JAXBException {
-		OType ort = new OType();
+		Orteliste.Ort ort = new Orteliste.Ort();
 
-		OrteType returnOrt = new OrteType();
-		OrteType orte = this.xml.unmarshalOrt();
+		Orteliste returnOrt = new Orteliste();
+		Orteliste orte = this.xml.unmarshalOrt();
 
 		int paramId = Integer.parseInt(platz);
-		for (OType each : orte.getOrt()) {
+		for (Orteliste.Ort each : orte.getOrt()) {
 			if (Integer.parseInt(each.getPlatz()) == paramId) { 
 															// == paramId)
 				ort = each;
@@ -68,13 +67,13 @@ public marsh xml;
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
-	public void setOrt(OrteType temp) throws JAXBException,
+	public void setOrt(Orteliste temp) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		OrteType orte = this.xml.unmarshalOrt();
+		Orteliste orte = this.xml.unmarshalOrt();
 		int index = 0;
 		boolean achive = false;
 		int queryId = Integer.parseInt(temp.getOrt().get(0).getPlatz());
-		for (OType each : orte.getOrt()) {
+		for (Orteliste.Ort each : orte.getOrt()) {
 			if (Integer.parseInt(each.getPlatz()) == queryId) {
 				index = orte.getOrt().indexOf(each);
 				achive = true;
@@ -92,15 +91,15 @@ public marsh xml;
 	@POST
 	// @Path("post")
 	@Consumes(MediaType.APPLICATION_XML)
-	public void createOrt(OrteType o) throws JAXBException,
+	public void createOrt(Orteliste o) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		OrteType orte = this.xml.unmarshalOrt();
-		OrteType ortList = new OrteType();
+		Orteliste orte = this.xml.unmarshalOrt();
+		Orteliste ortList = new Orteliste();
 
 		o.getOrt().get(0).setPlatz(this.xml.unmarshalOrt().getOrt().get(0).getPlatz()); //id=Platz=String... in xml?richtig?
 
 		ortList.getOrt().add(o.getOrt().get(0));
-		for (OType each : orte.getOrt()) {
+		for (Orteliste.Ort each : orte.getOrt()) {
 			ortList.getOrt().add(each);
 		}
 		this.xml.marshalOrt(ortList);
@@ -111,8 +110,8 @@ public marsh xml;
 	public void deleteOrt(@PathParam("id") String platz) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = Integer.parseInt(platz);
-		OrteType orte = this.xml.unmarshalOrt();
-		for (OType each : orte.getOrt()) {
+		Orteliste orte = this.xml.unmarshalOrt();
+		for (Orteliste.Ort each : orte.getOrt()) {
 			if (Integer.parseInt(each.getPlatz()) == paramId) {
 				orte.getOrt().remove(each);
 				break;

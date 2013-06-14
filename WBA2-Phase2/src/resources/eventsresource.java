@@ -17,8 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import jaxb.EType;
-import jaxb.EventsType;
+import jaxb.Events;
 
 import org.xml.sax.SAXException;
 
@@ -33,22 +32,22 @@ public class eventsresource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public EventsType getEvents() throws JAXBException, SAXException {
+	public Events getEvents() throws JAXBException, SAXException {
 		return this.xml.unmarshalEvent();
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public EventsType getEvent(@PathParam("id") BigInteger eventID)
+	public Events getEvent(@PathParam("id") BigInteger eventID)
 			throws JAXBException {
-		EType veranstaltung = new EType();
+		Events.Event veranstaltung = new Events.Event();
 
-		EventsType returnEvent = new EventsType();
-		EventsType events = this.xml.unmarshalEvent();
+		Events returnEvent = new Events();
+		Events events = this.xml.unmarshalEvent();
 
 		int paramId = eventID.intValue();
-		for (EType each : events.getEvent()) {
+		for (Events.Event each : events.getEvent()) {
 			if (each.getEventID().intValue() == paramId) { // (each.getEventID().intValue()
 															// == paramId)
 				veranstaltung = each;
@@ -63,13 +62,13 @@ public class eventsresource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
-	public void setEvent(EventsType temp) throws JAXBException,
+	public void setEvent(Events temp) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		EventsType veranstaltungen = this.xml.unmarshalEvent();
+		Events veranstaltungen = this.xml.unmarshalEvent();
 		int index = 0;
 		boolean achive = false;
 		int queryId = temp.getEvent().get(0).getEventID().intValue();
-		for (EType each : veranstaltungen.getEvent()) {
+		for (Events.Event each : veranstaltungen.getEvent()) {
 			if (each.getEventID().intValue() == queryId) {
 				index = veranstaltungen.getEvent().indexOf(each);
 				achive = true;
@@ -87,15 +86,15 @@ public class eventsresource {
 	@POST
 	// @Path("post")
 	@Consumes(MediaType.APPLICATION_XML)
-	public void createEvent(EventsType e) throws JAXBException,
+	public void createEvent(Events e) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		EventsType events = this.xml.unmarshalEvent();
-		EventsType eventList = new EventsType();
+		Events events = this.xml.unmarshalEvent();
+		Events eventList = new Events();
 
 		e.getEvent().get(0).setEventID(BigInteger.valueOf(getNextId()));
 
 		eventList.getEvent().add(e.getEvent().get(0));
-		for (EType each : events.getEvent()) {
+		for (Events.Event each : events.getEvent()) {
 			eventList.getEvent().add(each);
 		}
 		this.xml.marshalEvent(eventList);
@@ -106,8 +105,8 @@ public class eventsresource {
 	public void deleteEvent(@PathParam("id") BigInteger eventID) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = eventID.intValue();
-		EventsType events = this.xml.unmarshalEvent();
-		for (EType each : events.getEvent()) {
+		Events events = this.xml.unmarshalEvent();
+		for (Events.Event each : events.getEvent()) {
 			if (each.getEventID().intValue() == paramId) {
 				events.getEvent().remove(each);
 				break;

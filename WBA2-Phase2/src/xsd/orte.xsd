@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-<xs:element name="Orteliste" type="OrteType" />
-	
+	<xs:element name="Orteliste">
 
-	<xs:complexType name="OrteType">
-		<xs:sequence>
-			<xs:element name="Ort" type="oType" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
 
-	<xs:complexType name="oType">
-		<xs:sequence>
-			<xs:element name="Ort" type="xs:string" />
-			<xs:element name="Platz" type="xs:string" />
-			<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
-			<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
-			<xs:element name="Oeffnungszeiten">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="geoeffnet_von" type="xs:time" />
-						<xs:element name="geoeffnet_bis" type="xs:time" />
-						<xs:element name="geschlossen_an" type="xs:string" />
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Preis">
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:minInclusive value="0" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Ort" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Ort" type="xs:string" />
+							<xs:element name="Platz" type="xs:string" />
+							<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
+							<xs:element name="max.Spieleranzahl" type="xs:positiveInteger" />
+							<xs:element name="Oeffnungszeiten">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="geoeffnet_von" type="xs:time" />
+										<xs:element name="geoeffnet_bis" type="xs:time" />
+										<xs:element name="geschlossen_an" type="xs:string" />
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Preis">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:minInclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
 
 
 </xs:schema>
