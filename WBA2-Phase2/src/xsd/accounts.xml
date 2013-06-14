@@ -1,7 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Accountliste xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="accounts.xsd">
   <Spieler>
-    <Anzeigename>Anzeigename</Anzeigename>
-    <Telefonnummer>Telefonnummer</Telefonnummer>
+    <Anzeigename>Michael</Anzeigename>
+    <Telefonnummer>01234</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Hans</Anzeigename>
+    <Telefonnummer>012345</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Klaus</Anzeigename>
+    <Telefonnummer>0123456</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Michael</Anzeigename>
+    <Telefonnummer>8910</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Frank</Anzeigename>
+    <Telefonnummer>125</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Monika</Anzeigename>
+    <Telefonnummer>123</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Torsten</Anzeigename>
+    <Telefonnummer>017234</Telefonnummer>
+  </Spieler>
+  
+  <Spieler>
+    <Anzeigename>Ben</Anzeigename>
+    <Telefonnummer>012334</Telefonnummer>
   </Spieler>
 </Accountliste>

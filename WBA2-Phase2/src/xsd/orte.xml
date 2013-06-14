@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Orteliste xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="orte.xsd">
   <Ort>
-    <Ort>Ort</Ort>
-    <Platz>Platz</Platz>
-    <min.Spieleranzahl>1</min.Spieleranzahl>
-    <max.Spieleranzahl>1</max.Spieleranzahl>
+    <Ort>Gummersbach</Ort>
+    <Platz>Sportplatz Gummersbach</Platz>
+    <min.Spieleranzahl>5</min.Spieleranzahl>
+    <max.Spieleranzahl>22</max.Spieleranzahl>
     <Oeffnungszeiten>
       <geoeffnet_von>12:00:00</geoeffnet_von>
-      <geoeffnet_bis>12:00:00</geoeffnet_bis>
-      <geschlossen_an>geschlossen_an</geschlossen_an>
+      <geoeffnet_bis>22:00:00</geoeffnet_bis>
+      <geschlossen_an>Sonntag</geschlossen_an>
     </Oeffnungszeiten>
     <Preis>0.0</Preis>
+  </Ort>
+  
+  <Ort>
+    <Ort>Gummersbach</Ort>
+    <Platz>Eugen-Haas Sporthalle</Platz>
+    <min.Spieleranzahl>10</min.Spieleranzahl>
+    <max.Spieleranzahl>40</max.Spieleranzahl>
+    <Oeffnungszeiten>
+      <geoeffnet_von>10:00:00</geoeffnet_von>
+      <geoeffnet_bis>20:30:00</geoeffnet_bis>
+      <geschlossen_an>Sonntag</geschlossen_an>
+    </Oeffnungszeiten>
+    <Preis>5</Preis>
+  </Ort>
+  
+  <Ort>
+    <Ort>Köln</Ort>
+    <Platz>Rheinenergie-Stadion</Platz>
+    <min.Spieleranzahl>5</min.Spieleranzahl>
+    <max.Spieleranzahl>22</max.Spieleranzahl>
+    <Oeffnungszeiten>
+      <geoeffnet_von>12:00:00</geoeffnet_von>
+      <geoeffnet_bis>22:00:00</geoeffnet_bis>
+      <geschlossen_an>Sonntag</geschlossen_an>
+    </Oeffnungszeiten>
+    <Preis>100000</Preis>
   </Ort>
 </Orteliste>
