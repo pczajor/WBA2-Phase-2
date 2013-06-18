@@ -8,6 +8,7 @@
 				<xs:element name="event" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence>
+							<xs:element name="Event-ID" type="xs:positiveInteger" />
 							<xs:element name="Spielzeitraum">
 								<xs:complexType>
 									<xs:sequence>
@@ -28,6 +29,7 @@
 							<xs:element name="Oertlichkeit">
 								<xs:complexType>
 									<xs:sequence>
+										<xs:element name="Ort-ID" type="xs:positiveInteger" />
 										<xs:element name="Ort" type="xs:string" />
 										<xs:element name="Platz" type="xs:string" />
 										<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />
@@ -54,7 +56,7 @@
 							<xs:element name="Spielerliste">
 								<xs:complexType>
 									<xs:sequence>
-										<xs:element name="Spieler">
+										<xs:element name="Spieler" maxOccurs="unbounded">
 											<xs:complexType>
 												<xs:sequence>
 													<xs:element name="Anzeigename" type="xs:string" />
@@ -93,7 +95,6 @@
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
-						<xs:attribute name="Event-ID" type="xs:positiveInteger" />
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>

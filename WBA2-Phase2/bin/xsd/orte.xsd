@@ -9,6 +9,7 @@
 				<xs:element name="Ort" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence>
+							<xs:element name="Ort-ID" type="xs:positiveInteger" />
 							<xs:element name="Ort" type="xs:string" />
 							<xs:element name="Platz" type="xs:string" />
 							<xs:element name="min.Spieleranzahl" type="xs:positiveInteger" />

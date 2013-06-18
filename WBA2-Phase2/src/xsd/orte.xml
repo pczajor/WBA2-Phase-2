@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Orteliste xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="orte.xsd">
   <Ort>
+    <Ort-ID>1</Ort-ID>
     <Ort>Gummersbach</Ort>
     <Platz>Sportplatz Gummersbach</Platz>
     <min.Spieleranzahl>5</min.Spieleranzahl>
@@ -12,8 +13,8 @@
     </Oeffnungszeiten>
     <Preis>0.0</Preis>
   </Ort>
-  
   <Ort>
+    <Ort-ID>2</Ort-ID>
     <Ort>Gummersbach</Ort>
     <Platz>Eugen-Haas Sporthalle</Platz>
     <min.Spieleranzahl>10</min.Spieleranzahl>
@@ -27,6 +28,7 @@
   </Ort>
   
   <Ort>
+    <Ort-ID>3</Ort-ID>
     <Ort>Köln</Ort>
     <Platz>Rheinenergie-Stadion</Platz>
     <min.Spieleranzahl>5</min.Spieleranzahl>
