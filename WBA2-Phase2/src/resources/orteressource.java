@@ -3,6 +3,7 @@ package resources;
 import helper.marsh;
 
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -44,16 +45,16 @@ public marsh xml;
 	@GET
 	@Path("{id}")
 	@Produces("application/xml")
-	public Orteliste getOrt(@PathParam("id") String platz)
+	public Orteliste getOrt(@PathParam("id") BigInteger ortID)
 			throws JAXBException {
 		Orteliste.Ort ort = new Orteliste.Ort();
 
 		Orteliste returnOrt = new Orteliste();
 		Orteliste orte = this.xml.unmarshalOrt();
 
-		int paramId = Integer.parseInt(platz);
+		int paramId = ortID.intValue();
 		for (Orteliste.Ort each : orte.getOrt()) {
-			if (Integer.parseInt(each.getPlatz()) == paramId) { 
+			if (each.getOrtID().intValue() == paramId) { 
 															// == paramId)
 				ort = each;
 
@@ -96,7 +97,7 @@ public marsh xml;
 		Orteliste orte = this.xml.unmarshalOrt();
 		Orteliste ortList = new Orteliste();
 
-		o.getOrt().get(0).setPlatz(this.xml.unmarshalOrt().getOrt().get(0).getPlatz()); //id=Platz=String... in xml?richtig?
+		o.getOrt().get(0).setOrtID(BigInteger.valueOf(getNextId()));
 
 		ortList.getOrt().add(o.getOrt().get(0));
 		for (Orteliste.Ort each : orte.getOrt()) {
@@ -107,12 +108,12 @@ public marsh xml;
 
 	@DELETE
 	@Path("{id}")
-	public void deleteOrt(@PathParam("id") String platz) throws JAXBException,
+	public void deleteOrt(@PathParam("id") BigInteger ortID) throws JAXBException,
 			FileNotFoundException, SAXException {
-		int paramId = Integer.parseInt(platz);
+		int paramId = ortID.intValue();
 		Orteliste orte = this.xml.unmarshalOrt();
 		for (Orteliste.Ort each : orte.getOrt()) {
-			if (Integer.parseInt(each.getPlatz()) == paramId) {
+			if (each.getOrtID().intValue() == paramId) {
 				orte.getOrt().remove(each);
 				break;
 			}
@@ -120,4 +121,14 @@ public marsh xml;
 		this.xml.marshalOrt(orte);
 	}
 
+	
+	public int getNextId() throws JAXBException {
+		int count = this.xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
+		count++;
+
+		return count;
+
+	}
+	
+	
 }

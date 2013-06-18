@@ -116,8 +116,7 @@ public class eventsresource {
 	}
 
 	public int getNextId() throws JAXBException {
-		int count = this.xml.unmarshalEvent().getEvent().get(0).getEventID()
-				.intValue();
+		int count = this.xml.unmarshalEvent().getEvent().get(0).getEventID().intValue();
 		count++;
 
 		return count;
