@@ -22,7 +22,7 @@
 			<Preis>5</Preis>
 		</Oertlichkeit>
 		<Spielerliste>
-			<Spieler subAdmin=true>
+			<Spieler>
 				<Anzeigename>Hans</Anzeigename>
 				<Telefonnummer>012345</Telefonnummer>
 			</Spieler>
@@ -70,7 +70,7 @@
 			<Preis>100000</Preis>
 		</Oertlichkeit>
 		<Spielerliste>
-			<Spieler subAdmin=true>
+			<Spieler>
 				<Anzeigename>Hans</Anzeigename>
 				<Telefonnummer>012345</Telefonnummer>
 			</Spieler>
