@@ -29,17 +29,17 @@ import org.xml.sax.SAXException;
 public class orteressource {
 
 	
-public marsh xml;
+public static marsh xml;
 	
 	public orteressource() throws JAXBException {
-		this.xml = new marsh();
+		xml = new marsh();
 }
 	
 
 	@GET
 	@Produces("application/xml")
 	public Orteliste getOrte() throws JAXBException, SAXException{
-		return this.xml.unmarshalOrt();
+		return xml.unmarshalOrt();
 	}
 
 	@GET
@@ -50,7 +50,7 @@ public marsh xml;
 		Orteliste.Ort ort = new Orteliste.Ort();
 
 		Orteliste returnOrt = new Orteliste();
-		Orteliste orte = this.xml.unmarshalOrt();
+		Orteliste orte = xml.unmarshalOrt();
 
 		int paramId = ortID.intValue();
 		for (Orteliste.Ort each : orte.getOrt()) {
@@ -70,7 +70,7 @@ public marsh xml;
 	@Consumes(MediaType.APPLICATION_XML)
 	public void setOrt(Orteliste temp) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		Orteliste orte = this.xml.unmarshalOrt();
+		Orteliste orte =xml.unmarshalOrt();
 		int index = 0;
 		boolean achive = false;
 		int queryId = Integer.parseInt(temp.getOrt().get(0).getPlatz());
@@ -86,7 +86,7 @@ public marsh xml;
 		} else {
 			System.out.printf("Fehler, Ort nicht gefunden!");
 		}
-		this.xml.marshalOrt(orte);
+		xml.marshalOrt(orte);
 	}
 
 	@POST
@@ -94,7 +94,7 @@ public marsh xml;
 	@Consumes(MediaType.APPLICATION_XML)
 	public void createOrt(Orteliste o) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		Orteliste orte = this.xml.unmarshalOrt();
+		Orteliste orte = xml.unmarshalOrt();
 		Orteliste ortList = new Orteliste();
 
 		o.getOrt().get(0).setOrtID(BigInteger.valueOf(getNextId()));
@@ -103,7 +103,7 @@ public marsh xml;
 		for (Orteliste.Ort each : orte.getOrt()) {
 			ortList.getOrt().add(each);
 		}
-		this.xml.marshalOrt(ortList);
+		xml.marshalOrt(ortList);
 	}
 
 	@DELETE
@@ -111,19 +111,19 @@ public marsh xml;
 	public void deleteOrt(@PathParam("id") BigInteger ortID) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = ortID.intValue();
-		Orteliste orte = this.xml.unmarshalOrt();
+		Orteliste orte = xml.unmarshalOrt();
 		for (Orteliste.Ort each : orte.getOrt()) {
 			if (each.getOrtID().intValue() == paramId) {
 				orte.getOrt().remove(each);
 				break;
 			}
 		}
-		this.xml.marshalOrt(orte);
+		xml.marshalOrt(orte);
 	}
 
 	
-	public int getNextId() throws JAXBException {
-		int count = this.xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
+	public static int getNextId() throws JAXBException {
+		int count = xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
 		count++;
 
 		return count;

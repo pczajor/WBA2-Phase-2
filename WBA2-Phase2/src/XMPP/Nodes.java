@@ -1,53 +1,344 @@
 package XMPP;
 
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.Chat;
-import java.util.*;
 import javax.ws.rs.core.MediaType;
-import java.io.*;
+import javax.xml.bind.JAXBException;
+
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.packet.DiscoverItems;
+import org.jivesoftware.smackx.pubsub.AccessModel;
+import org.jivesoftware.smackx.pubsub.ConfigureForm;
+import org.jivesoftware.smackx.pubsub.FormType;
+import org.jivesoftware.smackx.pubsub.Item;
+import org.jivesoftware.smackx.pubsub.LeafNode;
+import org.jivesoftware.smackx.pubsub.NodeType;
+import org.jivesoftware.smackx.pubsub.PayloadItem;
+import org.jivesoftware.smackx.pubsub.PublishModel;
+import org.jivesoftware.smackx.pubsub.SimplePayload;
+import org.jivesoftware.smackx.pubsub.Subscription;
+import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
+
+import javax.ws.rs.core.MediaType;
+
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import jaxb.Accountliste;
 import jaxb.Events;
 import jaxb.Orteliste;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.pubsub.PubSubManager;
-
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import XMPP.connection;
 
 public class Nodes {
 
-	private XMPPConnection connection;
-	private PubSubManager mgr;
-	private String userName;
-	private String password;
-	private String server;
-	private int port;
 	private Client restClient;
 	private WebResource webResource;
 	private String URL;
+	public static ItemEventListener<Item> listener;
 
-	public void login() throws XMPPException {
-		ConnectionConfiguration config = new ConnectionConfiguration(server,
-				port);
-		connection = new XMPPConnection(config);
+	public boolean publishEvent(String nodeName, String Ort, String oID, String Platz, String von, String bis, String sportart, String minS, String maxS, String gV, String gB, String ga,
+			String preis, String[] Spieler, String[] tNr,  String aSpieler, String atNr, String[] bSpieler, String[] btNr) throws Exception{
+		
+		BigInteger id = BigInteger.valueOf(resources.eventsresource.getNextId());
+		
+		String spielerliste="<Spielerliste>";
+		
+		for (int i=0; i<Spieler.length;i++){			
+			spielerliste+= "<Spieler>" +
+					"<Anzeigename>" + Spieler[i] + "</Anzeigename>" +
+					"<Telefonnummer>" + tNr[i] + "</Telefonnummer>" +
+				"</Spieler>" ;			
+		}
+		spielerliste+="</Spielerliste>";
+		
+		String blacklist="<Backlist>";
+		
+		for (int i=0; i<Spieler.length;i++){			
+			blacklist+= "<Spieler>" +
+					"<Anzeigename>" + bSpieler[i] + "</Anzeigename>" +
+					"<Telefonnummer>" + btNr[i] + "</Telefonnummer>" +
+				"</Spieler>" ;			
+		}
+		blacklist+="</Backlist>";
+		
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("<events>");
+		stringBuilder.append("<event>");
+		stringBuilder.append("<Event-ID>");
+		stringBuilder.append(id);
+		stringBuilder.append("</Event-ID>");
+		stringBuilder.append("<Spielzeitraum>");
+		stringBuilder.append("<von>");
+		stringBuilder.append(von);
+		stringBuilder.append("</von>");
+		stringBuilder.append("<bis>");
+		stringBuilder.append(bis);
+		stringBuilder.append("</bis>");
+		stringBuilder.append("</Spielzeitraum>");
+		stringBuilder.append("<Sportart>");
+		stringBuilder.append(sportart);
+		stringBuilder.append("</Sportart>");
+		stringBuilder.append("<Oertlichkeit>");
+		stringBuilder.append("<Ort-ID>");
+		stringBuilder.append(oID);
+		stringBuilder.append("</Ort-ID>");
+		stringBuilder.append("<Ort>");
+		stringBuilder.append(Ort);
+		stringBuilder.append("</Ort>");
+		stringBuilder.append("<Platz>");
+		stringBuilder.append(Platz);
+		stringBuilder.append("</Platz>");
+		stringBuilder.append("<min.Spieleranzahl>");
+		stringBuilder.append(minS);
+		stringBuilder.append("</min.Spieleranzahl>");
+		stringBuilder.append("<max.Spieleranzahl>");
+		stringBuilder.append(maxS);
+		stringBuilder.append("</max.Spieleranzahl>");
+		stringBuilder.append("<Oeffnungszeiten>");
+		stringBuilder.append("<geoeffnet_von>");
+		stringBuilder.append(gV);
+		stringBuilder.append("</geoeffnet_von>");
+		stringBuilder.append("<geoeffnet_bis>");
+		stringBuilder.append(gB);
+		stringBuilder.append("</geoeffnet_bis>");
+		stringBuilder.append("<geschlossen_an>");
+		stringBuilder.append(ga);
+		stringBuilder.append("</geschlossen_an>");
+		stringBuilder.append("</Oeffnungszeiten>");
+		stringBuilder.append("<Preis>");
+		stringBuilder.append(preis);
+		stringBuilder.append("</Preis>");
+		stringBuilder.append("</Oertlichkeit>");
+		stringBuilder.append(spielerliste);
+		stringBuilder.append(blacklist);
+		stringBuilder.append("<Admin>");
+		stringBuilder.append("<Anzeigename>");
+		stringBuilder.append(aSpieler);
+		stringBuilder.append("</Anzeigename>");
+		stringBuilder.append("<Telefonnummer>");
+		stringBuilder.append(atNr);
+		stringBuilder.append("</Telefonnummer>");
+		stringBuilder.append("</Admin>");
+		stringBuilder.append("</event>");
+		stringBuilder.append("</events>");
+		String rEvent= stringBuilder.toString() ;
+		
+		String xEvent= "<events>"+"<event>"+
+							"<Event-ID>"+id+"</Event-ID>" +
+							"<Spielzeitraum>" +
+								"<von>"+ von +"</von>" +
+								"<bis>"+ bis +"</bis>" +
+								"</Spielzeitraum>" +
+								"<Sportart>"+ sportart +"</Sportart>" +
+								"<Oertlichkeit>" +
+									"<Ort>"+ Ort +"</Ort>" +
+									"<Platz>"+ Platz +"</Platz>"+
+									"<Preis>"+ preis +"</Preis>" +
+								"</Oertlichkeit>" + 
+							spielerliste+
+							"<Admin>" +
+								"<Anzeigename>"+ aSpieler +"</Anzeigename>" +
+								"<Telefonnummer>"+ atNr +"</Telefonnummer>" +
+							"</Admin>" +
+						"</event>"+"</events>";
+		try{
+			restClient= Client.create();
+			webResource=restClient.resource("http://"+connection.getServer()+":"+connection.getPort()+"/events");
+			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rEvent);
+			
+			if(response.getStatus()==204){
+				
+				LeafNode node=null;
+			
+				try{
+					node=connection.mgr.getNode(nodeName);
+					SimplePayload sp= new SimplePayload(nodeName,"", xEvent);
+					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
+				
+					node.publish(pi);
+					return true;
+				
+				}
+				catch (XMPPException e) {
+					return false;
+				}
+			} 
+		}
+		catch(Exception e){
+			 return false;
+		}
+		return false;
+	}
+	
+	public boolean publishOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS) throws Exception{
+	
+		
+		BigInteger id = BigInteger.valueOf(resources.orteressource.getNextId());
+		
+		String rOrte = "<Orte>"+
+						"<Ort>"+
+							"<Ort-ID>"+id+"</Ort-ID>"+
+							"<Ort>Gummersbach</Ort>"+
+							"<Platz>Sportplatz Gummersbach</Platz>"+
+							"<min.Spieleranzahl>5</min.Spieleranzahl>"+
+							"<max.Spieleranzahl>22</max.Spieleranzahl>"+
+							"<Oeffnungszeiten>"+
+								"<geoeffnet_von>12:00:00</geoeffnet_von>"+
+								"<geoeffnet_bis>22:00:00</geoeffnet_bis>"+
+								"<geschlossen_an>Sonntag</geschlossen_an>"+
+							"</Oeffnungszeiten>"+
+							"<Preis>0.0</Preis>"+
+						"</Ort>"+"</Orte>";
+		
+		String xOrte = "<Orte>"+"<Ort>"+
+							"<Ort>Gummersbach</Ort>"+
+							"<Platz>Sportplatz Gummersbach</Platz>"+
+							"<min.Spieleranzahl>5</min.Spieleranzahl>"+
+							"<max.Spieleranzahl>22</max.Spieleranzahl>"+
+							"<Oeffnungszeiten>"+
+								"<geoeffnet_von>12:00:00</geoeffnet_von>"+
+								"<geoeffnet_bis>22:00:00</geoeffnet_bis>"+
+								"<geschlossen_an>Sonntag</geschlossen_an>"+
+							"</Oeffnungszeiten>"+
+							"<Preis>0.0</Preis>"+
+						"</Ort>"+"</Orte>";
+			
+		try{
+			restClient= Client.create();
+			webResource=restClient.resource("http://"+connection.getServer()+":"+connection.getPort()+"/orte");
+			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rOrte);
+			
+			if(response.getStatus()==204){
+				
+				LeafNode node=null;
+			
+				try{
+					node=connection.mgr.getNode(nodeName);
+					SimplePayload sp= new SimplePayload(nodeName,"", xOrte);
+					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
+				
+					node.publish(pi);
+					return true;
+				
+				}
+				catch (XMPPException e) {
+					return false;
+				}
+			} 
+		}
+		catch(Exception e){
+			 return false;
+		}
+		return false;
+	}
+	
+ 	public boolean subscribeNode(String nodeName){
+		LeafNode node = null;
+		try {
+			node = connection.mgr.getNode(nodeName);
+			node.subscribe(connection.userName+"@"+connection.getServer());
+			node.addItemEventListener(listener);
+			return true;
+		}
+		catch(XMPPException e){
+			return false;
+		}
+		
+	}
+	
+	public boolean unsubscribeNode(String nodeName, ItemEventListener<Item> item){
+		LeafNode node = null;
+		try{
+			node = connection.mgr.getNode(nodeName);
+			if (item != null){
+				node.removeItemEventListener(item);
+				node.unsubscribe(connection.userName + "@" + connection.getServer());
+				}
+			return true;
+		}
+		catch (Exception e){
+			return false;
+		}
+		
+		
+	}
+	
+	public List<String> getSubscribedNodes() {
+		List<String> entries = new ArrayList<String>();
+		
+		try{
+			Iterator<Subscription> subscription = connection.mgr.getSubscriptions().iterator();
+			
+			while(subscription.hasNext()){
+				entries.add(subscription.next().getNode());
+			}
+		}
+		catch(Exception e){
+			
+		}
+		return entries;
+		}
+		
+	public List<String> getAllNodes() {
 
-		connection.connect();
-		this.setUsername("user1");
-		this.setPassword("user");
-		connection.login(userName, password);
-		mgr = new PubSubManager(connection, "pubsub." + connection.getHost());
+		List<String> entries = new ArrayList<String>();
+
+		try {
+			DiscoverItems items = connection.mgr.discoverNodes(null);
+			Iterator<DiscoverItems.Item> it = items.getItems();
+
+			while (it.hasNext()) {
+				entries.add(it.next().getNode());
+			}
+
+		} catch (XMPPException e) {
+			e.printStackTrace();
+		}
+
+		return entries;
 	}
 
-	public void disconnect() {
-		connection.disconnect();
+	public boolean createLeafNode(String leafnodeName) {
+
+		LeafNode leafNode = null;
+		ConfigureForm nodeConfig = new ConfigureForm(FormType.submit);
+		nodeConfig.setAccessModel(AccessModel.open);
+		nodeConfig.setDeliverPayloads(true);
+		nodeConfig.setNotifyRetract(true);
+		nodeConfig.setNotifyConfig(true);
+		nodeConfig.setSubscribe(true);
+		nodeConfig.setPersistentItems(true);
+		nodeConfig.setPublishModel(PublishModel.open);
+		nodeConfig.setNodeType(NodeType.leaf);
+		//nodeConfig.setCollection(BASE_NODE);
+
+		try {
+			leafNode = connection.mgr.getNode(leafnodeName);
+		} catch (XMPPException ex) {
+			System.err.println("Node nicht gefunden!");
+
+			if (ex.getXMPPError().getCode() == 404) {
+				try {
+					leafNode = connection.mgr.createNode(leafnodeName);
+					if (nodeConfig != null)
+						leafNode.sendConfigurationForm(nodeConfig);
+				} catch (XMPPException ex2) {
+					System.err.println("Node konnte nicht erstellt werden!");
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+	
+	public void deleteNode(String nodeName) throws XMPPException{
+		connection.mgr.deleteNode(nodeName);
 	}
 
 	private WebResource rest() {
@@ -61,8 +352,8 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + getServer() + ":"
-				+ getPort() + "/accounts");
+		webResource = restClient.resource("http://" + connection.getServer()
+				+ ":" + connection.getPort() + "/accounts");
 		webResource.path(id);
 
 		Accountliste account = webResource.type(MediaType.APPLICATION_XML).get(
@@ -80,22 +371,25 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + getServer() + ":"
-				+ getPort() + "/orte");
+		webResource = restClient.resource("http://" + connection.getServer()
+				+ ":" + connection.getPort() + "/orte");
 		webResource.path(String.valueOf(id));
 
 		Orteliste ort = webResource.type(MediaType.APPLICATION_XML).get(
 				Orteliste.class);
 
-		temp = "ID: " + ort.getOrt().get(0).getOrtID() + "\n" 
-				+ "Ort: " + ort.getOrt().get(0).getOrt() + "\n" 
-				+ "Platz: " + ort.getOrt().get(0).getPlatz() + "\n"
-				+ "Min. Spieler: " + ort.getOrt().get(0).getMinSpieleranzahl() + "\n"
-				+ "Max. Spieler:" + ort.getOrt().get(0).getMaxSpieleranzahl() + "\n"
-				+ "Geöffnet von: " + ort.getOrt().get(0).getOeffnungszeiten().getGeoeffnetVon() + "\n"
-				+ "Geöffnet bis: " + ort.getOrt().get(0).getOeffnungszeiten().getGeoeffnetBis() + "\n"
-				+ "Geschlossen an: " + ort.getOrt().get(0).getOeffnungszeiten().getGeschlossenAn() + "\n"
-				+ "Preis: " + ort.getOrt().get(0).getPreis() + "\n";
+		temp = "ID: " + ort.getOrt().get(0).getOrtID() + "\n" + "Ort: "
+				+ ort.getOrt().get(0).getOrt() + "\n" + "Platz: "
+				+ ort.getOrt().get(0).getPlatz() + "\n" + "Min. Spieler: "
+				+ ort.getOrt().get(0).getMinSpieleranzahl() + "\n"
+				+ "Max. Spieler:" + ort.getOrt().get(0).getMaxSpieleranzahl()
+				+ "\n" + "Geöffnet von: "
+				+ ort.getOrt().get(0).getOeffnungszeiten().getGeoeffnetVon()
+				+ "\n" + "Geöffnet bis: "
+				+ ort.getOrt().get(0).getOeffnungszeiten().getGeoeffnetBis()
+				+ "\n" + "Geschlossen an: "
+				+ ort.getOrt().get(0).getOeffnungszeiten().getGeschlossenAn()
+				+ "\n" + "Preis: " + ort.getOrt().get(0).getPreis() + "\n";
 		return temp;
 	}
 
@@ -103,62 +397,34 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + getServer() + ":"
-				+ getPort() + "/events");
+		webResource = restClient.resource("http://" + connection.getServer()
+				+ ":" + connection.getPort() + "/events");
 		webResource.path(String.valueOf(id));
 
 		Events event = webResource.type(MediaType.APPLICATION_XML).get(
 				Events.class);
-		
-		//event.getEvent().get(0).getSpielerliste() 
-		
-		//or(each:  ){
-			
-	
 
-		temp = "ID: " + event.getEvent().get(0).getEventID() + "\n" +
-				"ID: " + event.getEvent().get(0).getSpielzeitraum().getVon() + "\n" +
-				"ID: " + event.getEvent().get(0).getSpielzeitraum().getBis() + "\n" +
-				"ID: " + event.getEvent().get(0).getSportart() + "\n" +
-				"Örtlichkeit"+ getOrt(event.getEvent().get(0).getOertlichkeit().getOrtID()) + "\n" +
-				"Spielerlist" + "\n" +
-				"ID: " + event.getEvent().get(0).getAdmin() + "\n" +
-				"Blacklist";
-		
-				
+		temp = "ID: " + event.getEvent().get(0).getEventID() + "\n"
+				+ "Sportart: " + event.getEvent().get(0).getSportart() + "\n"
+				+ "Start: "
+				+ event.getEvent().get(0).getSpielzeitraum().getVon() + "\n"
+				+ "Min. Teilnehmer: "
+				+ event.getEvent().get(0).getSpielerliste().getMinSpieler()
+				+ "\n" + "Max. Teilnehmer: "
+				+ event.getEvent().get(0).getSpielerliste().getMaxSpieler()
+				+ "\n" + "Ende: "
+				+ event.getEvent().get(0).getSpielzeitraum().getBis() + "\n"
+				+ "Örtlichkeit"
+				+ getOrt(event.getEvent().get(0).getOertlichkeit().getOrtID())
+				+ "\n" + "Spielerlist" + "\n" + "ID: "
+				+ event.getEvent().get(0).getAdmin() + "\n" + "Blacklist"
+				+ event.getEvent().get(0).getBacklist();
+
 		return temp;
 	}
-	public String getUsername() {
-		return userName;
-	}
 
-	public void setUsername(String username) {
-		this.userName = username;
-	}
-
-	public String getServer() {
-		return server;
-	}
-
-	public void setServer(String server) {
-		this.server = server;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	
+	
 	/*
 	 * public static void main(String args[]) throws XMPPException, IOException
 	 * { // declare variables Nodes c = new Nodes(); BufferedReader br = new
