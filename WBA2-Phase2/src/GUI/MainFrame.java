@@ -14,11 +14,22 @@ public class MainFrame extends JFrame {
 	JButton btn_publish;
 	JButton btn_publish_event;
 	JButton btn_publish_ort;
+	JTextField t_nodeName;
+	JTextField t_Ort;
+	JTextField t_Platz;
+	JTextField t_von;
+	JTextField t_bis;
+	JTextField t_minS;
+	JTextField t_maxS;
+	JTextField t_ga;
+	JTextField t_Preis;
+	
 	
 	JButton btn_subscribe;
 	JButton btn_subscribe_to;
 	JButton btn_browse;
-	JButton btn_browse_nodes;
+	JButton btn_browse_events;
+	JButton btn_browse_orte;
 	JButton btn_browse_subscribtions;
 	
 	JButton btn_e;
@@ -29,7 +40,6 @@ public class MainFrame extends JFrame {
 	JTextField t_username;
 	JTextField t_password;
 
-	String username, password;
 
 	public MainFrame() {
 		this.getContentPane().setLayout(null);
@@ -73,13 +83,16 @@ public class MainFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btn_browse) {
 				new BrowseFrame();
+				dispose();
 			}
 			if (e.getSource() == btn_login) {
 				new LoggedFrame();
+				dispose();
 				
 			}
 			if (e.getSource() == btn_publish) {
 				new PublishFrame();
+				dispose();
 			}
 			if (e.getSource() == btn_subscribe) {
 				new SubscribeFrame();
@@ -93,16 +106,18 @@ public class MainFrame extends JFrame {
 			public BrowseFrame() {
 				this.getContentPane().setLayout(null);
 				
-				btn_browse_nodes = new JButton("Browse Nodes");
-				btn_browse_subscribtions = new JButton("Browse Subscribtions");
+				btn_browse_events = new JButton("Browse Events");
+				btn_browse_orte = new JButton("Browse Orte");
 				btn_browse_subscribtions = new JButton("Browse Subscribtions");
 				
-				btn_browse_subscribtions.setBounds(50, 50, 150, 25);
-				btn_browse_nodes.setBounds(210, 50, 150, 25);
+				btn_browse_events.setBounds(50, 50, 150, 25);
+				btn_browse_orte.setBounds(210, 50, 150, 25);
+				btn_browse_subscribtions.setBounds(50, 20, 310, 25);
 				
+				this.getContentPane().add(btn_browse_events);
+				this.getContentPane().add(btn_browse_orte);
 				this.getContentPane().add(btn_browse_subscribtions);
-				this.getContentPane().add(btn_browse_nodes);
-
+				
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
 
@@ -125,11 +140,46 @@ public class MainFrame extends JFrame {
 				btn_publish_event = new JButton("Publish Event");
 				btn_publish_ort = new JButton("Publish Ort");
 				
+				
 				btn_publish_event.setBounds(50, 50, 150, 25);
 				btn_publish_ort.setBounds(210, 50, 150, 25);
 
 				this.getContentPane().add(btn_publish_event);
 				this.getContentPane().add(btn_publish_ort);
+				
+				
+				
+				//Publishort:
+				t_nodeName =new JTextField("Name");
+				t_Ort =new JTextField("Ort");
+				t_Platz =new JTextField("Platz");
+				t_von =new JTextField("Geöffnet von");
+				t_bis =new JTextField("Geöffnet bis");
+				t_minS =new JTextField("Min. Spielerzahl");
+				t_maxS =new JTextField("Max. Spielerzahl");
+				t_ga =new JTextField("Geschlossen am:");
+				t_Preis =new JTextField("Preis");
+				
+				t_nodeName.setBounds(50,100,50,25);
+				t_Ort.setBounds(50,130,50,25);
+				t_Platz.setBounds(50,160,50,25);
+				t_von.setBounds(50,190,50,25);
+				t_bis.setBounds(50,220,50,25);
+				t_minS.setBounds(50,250,50,25);
+				t_maxS.setBounds(50,280,50,25);
+				t_ga.setBounds(50,310,50,25);
+				t_Preis.setBounds(50,340,50,25);
+				
+				this.getContentPane().add(t_nodeName);
+				this.getContentPane().add(t_Ort);
+				this.getContentPane().add(t_Platz);
+				this.getContentPane().add(t_von);
+				this.getContentPane().add(t_bis);
+				this.getContentPane().add(t_minS);
+				this.getContentPane().add(t_maxS);
+				this.getContentPane().add(t_ga);
+				this.getContentPane().add(t_Preis);
+				
 				
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
@@ -196,7 +246,6 @@ public class MainFrame extends JFrame {
 
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
-
 				this.addWindowListener(new WindowListener() {
 
 					@Override
@@ -241,6 +290,7 @@ public class MainFrame extends JFrame {
 
 					}
 				});
+				
 			}
 
 			@Override
