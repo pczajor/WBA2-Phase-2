@@ -12,12 +12,20 @@ import javax.swing.JTextField;
 
 public class MainFrame extends JFrame {
 	JButton btn_publish;
+	JButton btn_publish_event;
+	JButton btn_publish_ort;
+	
 	JButton btn_subscribe;
+	JButton btn_subscribe_to;
 	JButton btn_browse;
+	JButton btn_browse_nodes;
+	JButton btn_browse_subscribtions;
+	
 	JButton btn_e;
+	JButton btn_f;
+	JButton btn_g;
 	JButton btn_login;
 	JButton btn_register;
-
 	JTextField t_username;
 	JTextField t_password;
 
@@ -84,19 +92,22 @@ public class MainFrame extends JFrame {
 			// initialises the frame and opens it
 			public BrowseFrame() {
 				this.getContentPane().setLayout(null);
-				this.initWindow();
+				
+				btn_browse_nodes = new JButton("Browse Nodes");
+				btn_browse_subscribtions = new JButton("Browse Subscribtions");
+				btn_browse_subscribtions = new JButton("Browse Subscribtions");
+				
+				btn_browse_subscribtions.setBounds(50, 50, 150, 25);
+				btn_browse_nodes.setBounds(210, 50, 150, 25);
+				
+				this.getContentPane().add(btn_browse_subscribtions);
+				this.getContentPane().add(btn_browse_nodes);
+
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
 
 			}
 
-			protected void initWindow() {
-				btn_e = new JButton("Test");
-				btn_e.setBounds(20, 200, 360, 25);
-
-				this.getContentPane().add(btn_e);
-
-			}
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -110,19 +121,21 @@ public class MainFrame extends JFrame {
 			// initialises the frame and opens it
 			public PublishFrame() {
 				this.getContentPane().setLayout(null);
-				this.initWindow();
+				
+				btn_publish_event = new JButton("Publish Event");
+				btn_publish_ort = new JButton("Publish Ort");
+				
+				btn_publish_event.setBounds(50, 50, 150, 25);
+				btn_publish_ort.setBounds(210, 50, 150, 25);
+
+				this.getContentPane().add(btn_publish_event);
+				this.getContentPane().add(btn_publish_ort);
+				
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
 
 			}
 
-			protected void initWindow() {
-				btn_e = new JButton("Test");
-				btn_e.setBounds(20, 200, 360, 25);
-
-				this.getContentPane().add(btn_e);
-
-			}
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -130,25 +143,26 @@ public class MainFrame extends JFrame {
 
 			}
 		}
+		
 		public class SubscribeFrame extends JFrame implements ActionListener
 
 		{
 			// initialises the frame and opens it
 			public SubscribeFrame() {
 				this.getContentPane().setLayout(null);
-				this.initWindow();
+				
+				btn_subscribe_to = new JButton("Subscribe to:");
+				btn_subscribe_to.setBounds(20, 50, 360, 25);
+
+				this.getContentPane().add(btn_subscribe_to);
+				
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
+				
+
 
 			}
 
-			protected void initWindow() {
-				btn_e = new JButton("Test");
-				btn_e.setBounds(20, 200, 360, 25);
-
-				this.getContentPane().add(btn_e);
-
-			}
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -176,6 +190,9 @@ public class MainFrame extends JFrame {
 
 				ButtonHandler handler = new ButtonHandler();
 				btn_browse.addActionListener(handler);
+				btn_subscribe.addActionListener(handler);
+				btn_publish.addActionListener(handler);
+				
 
 				this.setVisible(true);
 				this.setBounds(10, 10, 420, 600);
