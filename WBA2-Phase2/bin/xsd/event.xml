@@ -7,6 +7,8 @@
 			<von>2013-07-31T12:00:00</von>
 			<bis>2013-07-31T14:00:00</bis>
 		</Spielzeitraum>
+		<min.Spieler>6</min.Spieler>
+		<max.Spieler>22</max.Spieler>
 		<Sportart>Fußball</Sportart>
 		<Oertlichkeit>
 			<Ort-ID>2</Ort-ID>
@@ -55,6 +57,8 @@
 			<von>2013-07-29T12:00:00</von>
 			<bis>2013-07-29T14:00:00</bis>
 		</Spielzeitraum>
+		<min.Spieler>6</min.Spieler>
+		<max.Spieler>22</max.Spieler>
 		<Sportart>Fußball</Sportart>
 		<Oertlichkeit>
 			<Ort-ID>3</Ort-ID>

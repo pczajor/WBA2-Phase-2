@@ -17,6 +17,8 @@
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="min.Spieler" type="xs:positiveInteger" />
+							<xs:element name="max.Spieler" type="xs:positiveInteger" />
 							<xs:element name="Sportart">
 								<xs:simpleType>
 									<xs:restriction base="xs:string">
@@ -62,12 +64,10 @@
 													<xs:element name="Anzeigename" type="xs:string" />
 													<xs:element name="Telefonnummer" type="xs:string" />
 												</xs:sequence>
-												<xs:attribute name="subAdmin" type="xs:boolean" />
+												<!--  <xs:attribute name="subAdmin" type="xs:boolean" /> -->
 											</xs:complexType>
 										</xs:element>
 									</xs:sequence>
-									<xs:attribute name="min.Spieler" type="xs:positiveInteger" />
-									<xs:attribute name="max.Spieler" type="xs:positiveInteger" />
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="Backlist">
@@ -79,7 +79,6 @@
 													<xs:element name="Anzeigename" type="xs:string" />
 													<xs:element name="Telefonnummer" type="xs:string" />
 												</xs:sequence>
-												<xs:attribute name="subAdmin" type="xs:boolean" />
 											</xs:complexType>
 										</xs:element>
 									</xs:sequence>

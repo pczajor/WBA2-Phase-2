@@ -175,7 +175,7 @@ public class Nodes {
 		return false;
 	}
 	
-	public boolean publishOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS) throws Exception{
+	public boolean publishOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS, String ga, String Preis) throws Exception{
 	
 		
 		BigInteger id = BigInteger.valueOf(resources.orteressource.getNextId());
@@ -183,29 +183,30 @@ public class Nodes {
 		String rOrte = "<Orte>"+
 						"<Ort>"+
 							"<Ort-ID>"+id+"</Ort-ID>"+
-							"<Ort>Gummersbach</Ort>"+
-							"<Platz>Sportplatz Gummersbach</Platz>"+
-							"<min.Spieleranzahl>5</min.Spieleranzahl>"+
-							"<max.Spieleranzahl>22</max.Spieleranzahl>"+
+							"<Ort>"+ Ort +"</Ort>"+
+							"<Platz>"+ Platz +"</Platz>"+
+							"<min.Spieleranzahl>"+ minS +"</min.Spieleranzahl>"+
+							"<max.Spieleranzahl>"+ maxS +"</max.Spieleranzahl>"+
 							"<Oeffnungszeiten>"+
-								"<geoeffnet_von>12:00:00</geoeffnet_von>"+
-								"<geoeffnet_bis>22:00:00</geoeffnet_bis>"+
-								"<geschlossen_an>Sonntag</geschlossen_an>"+
+								"<geoeffnet_von>"+ von +"</geoeffnet_von>"+
+								"<geoeffnet_bis>"+ bis +"</geoeffnet_bis>"+
+								"<geschlossen_an>"+ ga +"</geschlossen_an>"+
 							"</Oeffnungszeiten>"+
-							"<Preis>0.0</Preis>"+
+							"<Preis>"+ Preis+ "</Preis>"+
 						"</Ort>"+"</Orte>";
 		
-		String xOrte = "<Orte>"+"<Ort>"+
-							"<Ort>Gummersbach</Ort>"+
-							"<Platz>Sportplatz Gummersbach</Platz>"+
-							"<min.Spieleranzahl>5</min.Spieleranzahl>"+
-							"<max.Spieleranzahl>22</max.Spieleranzahl>"+
-							"<Oeffnungszeiten>"+
-								"<geoeffnet_von>12:00:00</geoeffnet_von>"+
-								"<geoeffnet_bis>22:00:00</geoeffnet_bis>"+
-								"<geschlossen_an>Sonntag</geschlossen_an>"+
-							"</Oeffnungszeiten>"+
-							"<Preis>0.0</Preis>"+
+		String xOrte = "<Orte>"+
+							"<Ort>"+
+								"<Ort>"+ Ort +"</Ort>"+
+								"<Platz>"+ Platz +"</Platz>"+
+								"<min.Spieleranzahl>"+ minS +"</min.Spieleranzahl>"+
+								"<max.Spieleranzahl>"+ maxS +"</max.Spieleranzahl>"+
+								"<Oeffnungszeiten>"+
+									"<geoeffnet_von>"+ von +"</geoeffnet_von>"+
+									"<geoeffnet_bis>"+ bis +"</geoeffnet_bis>"+
+									"<geschlossen_an>"+ ga +"</geschlossen_an>"+
+								"</Oeffnungszeiten>"+
+								"<Preis>"+ Preis +"</Preis>"+
 						"</Ort>"+"</Orte>";
 			
 		try{
@@ -315,7 +316,6 @@ public class Nodes {
 		nodeConfig.setPersistentItems(true);
 		nodeConfig.setPublishModel(PublishModel.open);
 		nodeConfig.setNodeType(NodeType.leaf);
-		//nodeConfig.setCollection(BASE_NODE);
 
 		try {
 			leafNode = connection.mgr.getNode(leafnodeName);
