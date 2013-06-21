@@ -341,12 +341,13 @@ public class Nodes {
 		connection.mgr.deleteNode(nodeName);
 	}
 
+	/*
 	private WebResource rest() {
 		restClient = Client.create();
 		webResource = restClient.resource(this.URL);
 		webResource.type("application/xml");
 		return webResource;
-	}
+	}*/
 
 	public String getAccount(String id) {
 		String temp = "";
@@ -409,9 +410,9 @@ public class Nodes {
 				+ "Start: "
 				+ event.getEvent().get(0).getSpielzeitraum().getVon() + "\n"
 				+ "Min. Teilnehmer: "
-				+ event.getEvent().get(0).getSpielerliste().getMinSpieler()
+				+ event.getEvent().get(0).getMinSpieler()
 				+ "\n" + "Max. Teilnehmer: "
-				+ event.getEvent().get(0).getSpielerliste().getMaxSpieler()
+				+ event.getEvent().get(0).getMaxSpieler()
 				+ "\n" + "Ende: "
 				+ event.getEvent().get(0).getSpielzeitraum().getBis() + "\n"
 				+ "Örtlichkeit"
