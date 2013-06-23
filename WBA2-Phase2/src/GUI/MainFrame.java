@@ -8,21 +8,16 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 public class MainFrame extends JFrame {
 	JButton btn_publish;
 	JButton btn_publish_event;
+	
 	JButton btn_publish_ort;
-	JTextField t_nodeName;
-	JTextField t_Ort;
-	JTextField t_Platz;
-	JTextField t_von;
-	JTextField t_bis;
-	JTextField t_minS;
-	JTextField t_maxS;
-	JTextField t_ga;
-	JTextField t_Preis;
+	
+	JButton btn_zurueck;
 	
 	
 	JButton btn_subscribe;
@@ -97,9 +92,12 @@ public class MainFrame extends JFrame {
 			if (e.getSource() == btn_subscribe) {
 				new SubscribeFrame();
 			}
+			if (e.getSource() == btn_publish_event) {
+			}
 		} // end of inner class
 
 		public class BrowseFrame extends JFrame implements ActionListener
+
 
 		{
 			// initialises the frame and opens it
@@ -110,6 +108,11 @@ public class MainFrame extends JFrame {
 				btn_browse_orte = new JButton("Browse Orte");
 				btn_browse_subscribtions = new JButton("Browse Subscribtions");
 				
+
+				JTextField t_Inhalt = new JTextField("Inhalt");
+				t_Inhalt.setBounds(20, 100, 360, 530);
+				this.getContentPane().add(t_Inhalt);
+				
 				btn_browse_events.setBounds(50, 50, 150, 25);
 				btn_browse_orte.setBounds(210, 50, 150, 25);
 				btn_browse_subscribtions.setBounds(50, 20, 310, 25);
@@ -119,7 +122,7 @@ public class MainFrame extends JFrame {
 				this.getContentPane().add(btn_browse_subscribtions);
 				
 				this.setVisible(true);
-				this.setBounds(10, 10, 420, 600);
+				this.setBounds(10, 10, 420, 700);
 
 			}
 
@@ -130,12 +133,133 @@ public class MainFrame extends JFrame {
 
 			}
 		}
+	
+
 		public class PublishFrame extends JFrame implements ActionListener
 
 		{
 			// initialises the frame and opens it
 			public PublishFrame() {
 				this.getContentPane().setLayout(null);
+				
+				JTextField t_nodeName= new JTextField("Name");
+				JTextField t_von=new JTextField("von");
+				JTextField t_bis=new JTextField("bis");
+				JTextField t_sportart=new JTextField("Sportart");
+					JTextField t_Ort= new JTextField("Ort");
+					JTextField t_o_Platz= new JTextField("Platz");
+					JTextField t_o_von= new JTextField("Geöffnet von");
+					JTextField t_o_bis= new JTextField("Geöffnet bis");
+					JTextField t_o_minS= new JTextField("Min. Spielerzahl");
+					JTextField t_o_maxS= new JTextField("Max. Spielerzahl");
+					JTextField t_o_ga= new JTextField("Geschlossen am:");
+					JTextField t_o_Preis= new JTextField("Preis");
+				JTextField t_spielerName=new JTextField("Spielernamen");
+				JTextField t_spielerNummer=new JTextField("Spielernummern");
+				JTextField t_blacklistName=new JTextField("Blacklistnamen");
+				JTextField t_blacklsitNummer=new JTextField("Blacklistnummern");
+				JTextField t_adminName=new JTextField("Adminname");
+				JTextField t_adminNummer=new JTextField("Adminnummer");
+				
+				JLabel l_nodeName= new JLabel("Name");
+				JLabel l_von=new JLabel("von");
+				JLabel l_bis=new JLabel("bis");
+				JLabel l_sportart=new JLabel("Sportart");
+					JLabel l_Ort= new JLabel("Ort");
+					JLabel l_o_Platz= new JLabel("Platz");
+					JLabel l_o_von= new JLabel("Geöffnet von");
+					JLabel l_o_bis= new JLabel("Geöffnet bis");
+					JLabel l_o_minS= new JLabel("Min. Spielerzahl");
+					JLabel l_o_maxS= new JLabel("Max. Spielerzahl");
+					JLabel l_o_ga= new JLabel("Geschlossen am:");
+					JLabel l_o_Preis= new JLabel("Preis");
+				JLabel l_spielerName=new JLabel("Spielernamen");
+				JLabel l_spielerNummer=new JLabel("Spielernummern");
+				JLabel l_blacklistName=new JLabel("Blacklistnamen");
+				JLabel l_blacklsitNummer=new JLabel("Blacklistnummern");
+				JLabel l_adminName=new JLabel("Adminname");
+				JLabel l_adminNummer=new JLabel("Adminnummer");
+				
+
+				int x= 210, y=20;
+				t_nodeName.setBounds(210,y,110,25);
+				t_von.setBounds(210,y+30,110,25);
+				t_bis.setBounds(210,y+60,110,25);
+				t_sportart.setBounds(210,y,110,25);
+					t_Ort.setBounds(210+30,y,110,25);
+					t_o_Platz.setBounds(210+30,y,110,25);
+					t_o_von.setBounds(210+30,y,110,25);
+					t_o_bis.setBounds(210+30,y,110,25);
+					t_o_minS.setBounds(210+30,y,110,25);
+					t_o_maxS.setBounds(210+30,y,110,25);
+					t_o_ga.setBounds(210+30,y,110,25);
+					t_o_Preis.setBounds(210+30,y,110,25);
+				t_spielerName.setBounds(210,y,110,25);
+				t_spielerNummer.setBounds(210,y,110,25);
+				t_blacklistName.setBounds(210,y,110,25);
+				t_blacklsitNummer.setBounds(210,y,110,25);
+				t_adminName.setBounds(210,y,110,25);
+				t_adminNummer.setBounds(210,y,110,25);
+				
+				l_nodeName.setBounds(50,100,110,25);
+				l_von.setBounds(50,130,110,25);
+				l_bis.setBounds(50,160,110,25);
+				l_sportart.setBounds(50,190,110,25);
+					l_Ort.setBounds(50+30,220,110,25);
+					l_o_Platz.setBounds(50+30,250,110,25);
+					l_o_von.setBounds(50+30,280,110,25);
+					l_o_bis.setBounds(50+30,310,110,25);
+					l_o_minS.setBounds(50+30,340,110,25);
+					l_o_maxS.setBounds(50+30,370,110,25);
+					l_o_ga.setBounds(50+30,400,110,25);
+					l_o_Preis.setBounds(50+30,430,110,25);
+				l_spielerName.setBounds(50,460,110,25);
+				l_spielerNummer.setBounds(50,490,110,25);
+				l_blacklistName.setBounds(50,520,110,25);
+				l_blacklsitNummer.setBounds(50,550,110,25);
+				l_adminName.setBounds(50,580,110,25);
+				l_adminNummer.setBounds(50,610,110,25);
+
+				
+				this.getContentPane().add(t_nodeName);
+				this.getContentPane().add(t_von);
+				this.getContentPane().add(t_bis);
+				this.getContentPane().add(t_sportart);
+					this.getContentPane().add(t_Ort);
+					this.getContentPane().add(t_o_Platz);
+					this.getContentPane().add(t_o_von);
+					this.getContentPane().add(t_o_bis);
+					this.getContentPane().add(t_o_minS);
+					this.getContentPane().add(t_o_maxS);
+					this.getContentPane().add(t_o_ga);
+					this.getContentPane().add(t_o_Preis);
+				this.getContentPane().add(t_spielerName);
+				this.getContentPane().add(t_spielerNummer);
+				this.getContentPane().add(t_blacklistName);
+				this.getContentPane().add(t_blacklsitNummer);
+				this.getContentPane().add(t_adminName);
+				this.getContentPane().add(t_adminNummer);
+				
+				this.getContentPane().add(l_nodeName);
+				this.getContentPane().add(l_von);
+				this.getContentPane().add(l_bis);
+				this.getContentPane().add(l_sportart);
+					this.getContentPane().add(l_Ort);
+					this.getContentPane().add(l_o_Platz);
+					this.getContentPane().add(l_o_von);
+					this.getContentPane().add(l_o_bis);
+					this.getContentPane().add(l_o_minS);
+					this.getContentPane().add(l_o_maxS);
+					this.getContentPane().add(l_o_ga);
+					this.getContentPane().add(l_o_Preis);
+				this.getContentPane().add(l_spielerName);
+				this.getContentPane().add(l_spielerNummer);
+				this.getContentPane().add(l_blacklistName);
+				this.getContentPane().add(l_blacklsitNummer);
+				this.getContentPane().add(l_adminName);
+				this.getContentPane().add(l_adminNummer);
+				
+				JLabel Name= new JLabel();
 				
 				btn_publish_event = new JButton("Publish Event");
 				btn_publish_ort = new JButton("Publish Ort");
@@ -147,43 +271,14 @@ public class MainFrame extends JFrame {
 				this.getContentPane().add(btn_publish_event);
 				this.getContentPane().add(btn_publish_ort);
 				
+
 				
 				
-				//Publishort:
-				t_nodeName =new JTextField("Name");
-				t_Ort =new JTextField("Ort");
-				t_Platz =new JTextField("Platz");
-				t_von =new JTextField("Geöffnet von");
-				t_bis =new JTextField("Geöffnet bis");
-				t_minS =new JTextField("Min. Spielerzahl");
-				t_maxS =new JTextField("Max. Spielerzahl");
-				t_ga =new JTextField("Geschlossen am:");
-				t_Preis =new JTextField("Preis");
-				
-				t_nodeName.setBounds(50,100,50,25);
-				t_Ort.setBounds(50,130,50,25);
-				t_Platz.setBounds(50,160,50,25);
-				t_von.setBounds(50,190,50,25);
-				t_bis.setBounds(50,220,50,25);
-				t_minS.setBounds(50,250,50,25);
-				t_maxS.setBounds(50,280,50,25);
-				t_ga.setBounds(50,310,50,25);
-				t_Preis.setBounds(50,340,50,25);
-				
-				this.getContentPane().add(t_nodeName);
-				this.getContentPane().add(t_Ort);
-				this.getContentPane().add(t_Platz);
-				this.getContentPane().add(t_von);
-				this.getContentPane().add(t_bis);
-				this.getContentPane().add(t_minS);
-				this.getContentPane().add(t_maxS);
-				this.getContentPane().add(t_ga);
-				this.getContentPane().add(t_Preis);
 				
 				
 				this.setVisible(true);
-				this.setBounds(10, 10, 420, 600);
-
+				this.setBounds(10, 10, 420, 700);
+				
 			}
 
 
@@ -201,13 +296,25 @@ public class MainFrame extends JFrame {
 			public SubscribeFrame() {
 				this.getContentPane().setLayout(null);
 				
+				
+				
+				
 				btn_subscribe_to = new JButton("Subscribe to:");
-				btn_subscribe_to.setBounds(20, 50, 360, 25);
+				btn_subscribe_to.setBounds(20, 80, 360, 25);
 
+
+				JLabel l_nodeName = new JLabel("Nodename:");
+				l_nodeName.setBounds(50, 50, 150, 25);
+				this.getContentPane().add(l_nodeName);
+				
+				JTextField t_nodeName = new JTextField("");
+				t_nodeName.setBounds(210, 50, 150, 25);
+				this.getContentPane().add(t_nodeName);
+				
 				this.getContentPane().add(btn_subscribe_to);
 				
 				this.setVisible(true);
-				this.setBounds(10, 10, 420, 600);
+				this.setBounds(10, 10, 420, 700);
 				
 
 
@@ -245,7 +352,7 @@ public class MainFrame extends JFrame {
 				
 
 				this.setVisible(true);
-				this.setBounds(10, 10, 420, 600);
+				this.setBounds(10, 10, 420, 700);
 				this.addWindowListener(new WindowListener() {
 
 					@Override
