@@ -123,10 +123,11 @@ public static marsh xml;
 
 	
 	public static int getNextId() throws JAXBException {
-		int count = xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
-		count++;
+		//int count = xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
+		//count++;
 
-		return count;
+		//return count=;
+		return 5;
 
 	}
 	

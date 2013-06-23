@@ -217,7 +217,7 @@ public class Nodes {
 	
 		//ID generieren
 		BigInteger id = BigInteger.valueOf(resources.orteressource.getNextId());
-		createLeafNode(nodeName);
+		//createLeafNode(nodeName);
 		
 		//rOrte = String für REST
 		String rOrte = "<Orte>"+
@@ -370,7 +370,7 @@ public class Nodes {
 
 		try {
 			//Wenn Node nicht gefunden dann neuen erstellen
-			leafNode = mgr.getNode(leafnodeName);
+			leafNode = (LeafNode) mgr.getNode(leafnodeName);
 		} catch (XMPPException ex) {
 			System.err.println("Node nicht gefunden!");
 
