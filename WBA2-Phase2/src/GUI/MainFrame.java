@@ -42,9 +42,11 @@ public class MainFrame extends JFrame {
 	JTextField t_password;
 	ButtonHandler handler = new ButtonHandler();
 	
-	Nodes con;
+	Nodes con = new Nodes();
 	server rest;
 	Config serverCon = new Config();
+	boolean error=false;
+	boolean ortp = false;
 	
 	
 
@@ -70,19 +72,74 @@ public class MainFrame extends JFrame {
 		if (e.getSource() == btn_login) {
 			rest= new server();
 			con.setUsername(t_username.getText());
-			//con.setPassword(t_password.getText());
+			con.setPassword(t_password.getText());
+			try {
+				con.connect();
+				con.login();
+
+					
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				error = true;
+				System.out.println("Login failed");
+			}
 			
-				System.out.println(con.getUsername());
-			
+			if(error==false){
 			new LoggedFrame() ;
 			dispose();
-			
+			}
 		
 
 			
 		}}};
 
 		btn_login.addActionListener(al);
+		this.addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				System.exit(0);
+
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+	
 
 	}
 
@@ -181,8 +238,8 @@ public class MainFrame extends JFrame {
 				final JTextField t_o_maxS= new JTextField("");
 				final JTextField t_o_ga= new JTextField("");
 				final JTextField t_o_Preis= new JTextField("");
-			final JTextField t_spielerName=new JTextField("");
-			final JTextField t_spielerNummer=new JTextField("");
+			final JTextField t_spielerName1=new JTextField("");
+			final JTextField t_spielerNummer1=new JTextField("");
 			final JTextField t_blacklistName=new JTextField("");
 			final JTextField t_blacklsitNummer=new JTextField("");
 			final JTextField t_adminName=new JTextField("");
@@ -221,8 +278,8 @@ public class MainFrame extends JFrame {
 				t_o_maxS.setBounds(210+30,y+270,110,25);
 				t_o_ga.setBounds(210+30,y+300,110,25);
 				t_o_Preis.setBounds(210+30,y+330,110,25);
-			t_spielerName.setBounds(210,y+360,110,25);
-			t_spielerNummer.setBounds(210,y+390,110,25);
+			t_spielerName1.setBounds(210,y+360,110,25);
+			t_spielerNummer1.setBounds(210,y+390,110,25);
 			t_blacklistName.setBounds(210,y+420,110,25);
 			t_blacklsitNummer.setBounds(210,y+450,110,25);
 			t_adminName.setBounds(210,y+480,110,25);
@@ -260,8 +317,8 @@ public class MainFrame extends JFrame {
 				this.getContentPane().add(t_o_maxS);
 				this.getContentPane().add(t_o_ga);
 				this.getContentPane().add(t_o_Preis);
-			this.getContentPane().add(t_spielerName);
-			this.getContentPane().add(t_spielerNummer);
+			this.getContentPane().add(t_spielerName1);
+			this.getContentPane().add(t_spielerNummer1);
 			this.getContentPane().add(t_blacklistName);
 			this.getContentPane().add(t_blacklsitNummer);
 			this.getContentPane().add(t_adminName);
@@ -319,8 +376,8 @@ public class MainFrame extends JFrame {
 				t_o_maxS.setVisible(false);
 				t_o_ga.setVisible(false);
 				t_o_Preis.setVisible(false);
-			t_spielerName.setVisible(false);
-			t_spielerNummer.setVisible(false);
+			t_spielerName1.setVisible(false);
+			t_spielerNummer1.setVisible(false);
 			t_blacklistName.setVisible(false);
 			t_blacklsitNummer.setVisible(false);
 			t_adminName.setVisible(false);
@@ -370,8 +427,8 @@ public class MainFrame extends JFrame {
 						t_o_maxS.setVisible(true);
 						t_o_ga.setVisible(true);
 						t_o_Preis.setVisible(true);
-					t_spielerName.setVisible(true);
-					t_spielerNummer.setVisible(true);
+					t_spielerName1.setVisible(true);
+					t_spielerNummer1.setVisible(true);
 					t_blacklistName.setVisible(true);
 					t_blacklsitNummer.setVisible(true);
 					t_adminName.setVisible(true);
@@ -413,8 +470,8 @@ public class MainFrame extends JFrame {
 						t_o_maxS.setVisible(true);
 						t_o_ga.setVisible(true);
 						t_o_Preis.setVisible(true);
-					t_spielerName.setVisible(false);
-					t_spielerNummer.setVisible(false);
+					t_spielerName1.setVisible(false);
+					t_spielerNummer1.setVisible(false);
 					t_blacklistName.setVisible(false);
 					t_blacklsitNummer.setVisible(false);
 					t_adminName.setVisible(false);
@@ -440,8 +497,55 @@ public class MainFrame extends JFrame {
 					l_adminNummer.setVisible(false);
 
 					btn_published.setVisible(true);
-					}
 					
+					ortp = true;
+					}
+					if(e.getSource()==btn_published){
+						String oID="3";
+						String[] Spieler = new String[2];
+						String[] tSpieler= new String[2];
+						Spieler[0]= t_spielerName1.getText();
+						tSpieler[0]=t_spielerNummer1.getText();
+						
+						
+						if(ortp==true){
+							try {
+								con.publishOrt(t_nodeName.getText(), t_Ort.getText(), t_o_Platz.getText(),t_o_von.getText(), t_o_bis.getText(), t_o_minS.getText(), 
+										t_o_maxS.getText(), t_o_ga.getText(), t_o_Preis.getText());
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						else{
+						try {
+							con.publishEvent(t_nodeName.getText(), t_Ort.getText(), oID, t_o_Platz.getText(), t_von.getText(), t_bis.getText(), t_sportart.getText(), t_o_minS.getText(), 
+									t_o_maxS.getText(), t_o_von.getText(), t_o_bis.getText(), t_o_ga.getText(), t_o_Preis.getText(), Spieler, tSpieler, t_adminName.getText(),
+									t_adminNummer.getText(), Spieler, tSpieler);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						}
+						
+						System.out.println("Publish accomplished");
+						
+						
+							
+							
+							
+							
+							
+							
+							
+							
+						
+						
+						
+						
+						
+						
+					}
 				}
 			};
 

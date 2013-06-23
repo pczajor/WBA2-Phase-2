@@ -40,7 +40,7 @@ import XMPP.connection;
 
 public class Nodes {
 	public  XMPPConnection connection;
-	public   PubSubManager mgr=new PubSubManager(connection, "pubsub." + connection.getHost());
+	public   PubSubManager mgr;
 	private  String username;
 	public   String password;
 	public  AccountManager am;
@@ -50,6 +50,15 @@ public class Nodes {
 	private WebResource webResource;
 	private String URL;
 	public static ItemEventListener<Item> listener;
+	
+	public  void connect() throws Exception{
+		ConnectionConfiguration config = new ConnectionConfiguration(Config.server,
+				Config.port);
+		connection = new XMPPConnection(config);
+		new PubSubManager(connection, "pubsub." + connection.getHost());
+		connection.connect();
+		
+	}
 
 	public boolean publishEvent(String nodeName, String Ort, String oID, String Platz, String von, String bis, String sportart, String minS, String maxS, String gV, String gB, String ga,
 			String preis, String[] Spieler, String[] tNr,  String aSpieler, String atNr, String[] bSpieler, String[] btNr) throws Exception{
@@ -441,14 +450,7 @@ public class Nodes {
 
 	
 	
-	public  void connect() throws Exception{
-		ConnectionConfiguration config = new ConnectionConfiguration(Config.server,
-				Config.port);
-		connection = new XMPPConnection(config);
-
-		connection.connect();
-		
-	}
+	
 	
 	public void registerUser(String username, String password, Map<String, String> attribute) throws XMPPException{
 		
@@ -456,10 +458,10 @@ public class Nodes {
 		
 	}
 
-	public void login(String userName, String password) throws XMPPException {
+	public void login() throws XMPPException {
 		try
 		{
-		connection.login(userName, password);
+		connection.login(username, password);
 		}
 		catch(XMPPException ex)
 		{
