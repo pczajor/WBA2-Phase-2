@@ -3,6 +3,9 @@ package XMPP;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
+import org.jivesoftware.smack.AccountManager;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.packet.DiscoverItems;
 import org.jivesoftware.smackx.pubsub.AccessModel;
@@ -12,6 +15,7 @@ import org.jivesoftware.smackx.pubsub.Item;
 import org.jivesoftware.smackx.pubsub.LeafNode;
 import org.jivesoftware.smackx.pubsub.NodeType;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
+import org.jivesoftware.smackx.pubsub.PubSubManager;
 import org.jivesoftware.smackx.pubsub.PublishModel;
 import org.jivesoftware.smackx.pubsub.SimplePayload;
 import org.jivesoftware.smackx.pubsub.Subscription;
@@ -23,6 +27,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import jaxb.Accountliste;
 import jaxb.Events;
@@ -34,6 +39,12 @@ import com.sun.jersey.api.client.WebResource;
 import XMPP.connection;
 
 public class Nodes {
+	public  XMPPConnection connection;
+	public   PubSubManager mgr=new PubSubManager(connection, "pubsub." + connection.getHost());
+	private  String username;
+	public   String password;
+	public  AccountManager am;
+	
 
 	private Client restClient;
 	private WebResource webResource;
@@ -148,7 +159,7 @@ public class Nodes {
 						"</event>"+"</events>";
 		try{
 			restClient= Client.create();
-			webResource=restClient.resource("http://"+connection.getServer()+":"+connection.getPort()+"/events");
+			webResource=restClient.resource("http://"+getServer()+":"+ getPort()+"/events");
 			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rEvent);
 			
 			if(response.getStatus()==204){
@@ -156,7 +167,7 @@ public class Nodes {
 				LeafNode node=null;
 			
 				try{
-					node=connection.mgr.getNode(nodeName);
+					node=mgr.getNode(nodeName);
 					SimplePayload sp= new SimplePayload(nodeName,"", xEvent);
 					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
 				
@@ -211,7 +222,7 @@ public class Nodes {
 			
 		try{
 			restClient= Client.create();
-			webResource=restClient.resource("http://"+connection.getServer()+":"+connection.getPort()+"/orte");
+			webResource=restClient.resource("http://"+getServer()+":"+getPort()+"/orte");
 			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rOrte);
 			
 			if(response.getStatus()==204){
@@ -219,7 +230,7 @@ public class Nodes {
 				LeafNode node=null;
 			
 				try{
-					node=connection.mgr.getNode(nodeName);
+					node=mgr.getNode(nodeName);
 					SimplePayload sp= new SimplePayload(nodeName,"", xOrte);
 					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
 				
@@ -241,8 +252,8 @@ public class Nodes {
  	public boolean subscribeNode(String nodeName){
 		LeafNode node = null;
 		try {
-			node = connection.mgr.getNode(nodeName);
-			node.subscribe(connection.userName+"@"+connection.getServer());
+			node = mgr.getNode(nodeName);
+			node.subscribe(username+"@"+getServer());
 			node.addItemEventListener(listener);
 			return true;
 		}
@@ -255,10 +266,10 @@ public class Nodes {
 	public boolean unsubscribeNode(String nodeName, ItemEventListener<Item> item){
 		LeafNode node = null;
 		try{
-			node = connection.mgr.getNode(nodeName);
+			node = mgr.getNode(nodeName);
 			if (item != null){
 				node.removeItemEventListener(item);
-				node.unsubscribe(connection.userName + "@" + connection.getServer());
+				node.unsubscribe(username + "@" + getServer());
 				}
 			return true;
 		}
@@ -273,7 +284,7 @@ public class Nodes {
 		List<String> entries = new ArrayList<String>();
 		
 		try{
-			Iterator<Subscription> subscription = connection.mgr.getSubscriptions().iterator();
+			Iterator<Subscription> subscription = mgr.getSubscriptions().iterator();
 			
 			while(subscription.hasNext()){
 				entries.add(subscription.next().getNode());
@@ -290,7 +301,7 @@ public class Nodes {
 		List<String> entries = new ArrayList<String>();
 
 		try {
-			DiscoverItems items = connection.mgr.discoverNodes(null);
+			DiscoverItems items = mgr.discoverNodes(null);
 			Iterator<DiscoverItems.Item> it = items.getItems();
 
 			while (it.hasNext()) {
@@ -318,13 +329,13 @@ public class Nodes {
 		nodeConfig.setNodeType(NodeType.leaf);
 
 		try {
-			leafNode = connection.mgr.getNode(leafnodeName);
+			leafNode = mgr.getNode(leafnodeName);
 		} catch (XMPPException ex) {
 			System.err.println("Node nicht gefunden!");
 
 			if (ex.getXMPPError().getCode() == 404) {
 				try {
-					leafNode = connection.mgr.createNode(leafnodeName);
+					leafNode = mgr.createNode(leafnodeName);
 					if (nodeConfig != null)
 						leafNode.sendConfigurationForm(nodeConfig);
 				} catch (XMPPException ex2) {
@@ -338,7 +349,7 @@ public class Nodes {
 	}
 	
 	public void deleteNode(String nodeName) throws XMPPException{
-		connection.mgr.deleteNode(nodeName);
+		mgr.deleteNode(nodeName);
 	}
 
 	/*
@@ -353,8 +364,8 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + connection.getServer()
-				+ ":" + connection.getPort() + "/accounts");
+		webResource = restClient.resource("http://" + getServer()
+				+ ":" + getPort() + "/accounts");
 		webResource.path(id);
 
 		Accountliste account = webResource.type(MediaType.APPLICATION_XML).get(
@@ -372,8 +383,8 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + connection.getServer()
-				+ ":" + connection.getPort() + "/orte");
+		webResource = restClient.resource("http://" + getServer()
+				+ ":" + getPort() + "/orte");
 		webResource.path(String.valueOf(id));
 
 		Orteliste ort = webResource.type(MediaType.APPLICATION_XML).get(
@@ -398,8 +409,8 @@ public class Nodes {
 		String temp = "";
 
 		restClient = Client.create();
-		webResource = restClient.resource("http://" + connection.getServer()
-				+ ":" + connection.getPort() + "/events");
+		webResource = restClient.resource("http://" + getServer()
+				+ ":" +getPort() + "/events");
 		webResource.path(String.valueOf(id));
 
 		Events event = webResource.type(MediaType.APPLICATION_XML).get(
@@ -422,10 +433,73 @@ public class Nodes {
 				+ event.getEvent().get(0).getBacklist();
 
 		return temp;
+		
+		
 	}
 
 	
+
 	
+	
+	public  void connect() throws Exception{
+		ConnectionConfiguration config = new ConnectionConfiguration(Config.server,
+				Config.port);
+		connection = new XMPPConnection(config);
+
+		connection.connect();
+		
+	}
+	
+	public void registerUser(String username, String password, Map<String, String> attribute) throws XMPPException{
+		
+		am.createAccount(username, password, attribute);
+		
+	}
+
+	public void login(String userName, String password) throws XMPPException {
+		try
+		{
+		connection.login(userName, password);
+		}
+		catch(XMPPException ex)
+		{
+			throw ex;
+		}
+	
+	}
+
+	public void disconnect() {
+		connection.disconnect();
+	}
+	
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public  void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getServer() {
+		return Config.server;
+	}
+
+
+	public  int getPort() {
+		return Config.port;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+	
+
+
+	public  void setPassword(String password) {
+		this.password = password;
+	}
 	/*
 	 * public static void main(String args[]) throws XMPPException, IOException
 	 * { // declare variables Nodes c = new Nodes(); BufferedReader br = new

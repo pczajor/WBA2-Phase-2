@@ -11,6 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.jivesoftware.smack.XMPPException;
+
+import XMPP.*;
+import grizzlyserver.*;
+
 public class MainFrame extends JFrame {
 	JButton btn_publish;
 	
@@ -36,6 +41,12 @@ public class MainFrame extends JFrame {
 	JTextField t_username;
 	JTextField t_password;
 	ButtonHandler handler = new ButtonHandler();
+	
+	Nodes con;
+	server rest;
+	Config serverCon = new Config();
+	
+	
 
 	public MainFrame() {
 		this.getContentPane().setLayout(null);
@@ -43,9 +54,9 @@ public class MainFrame extends JFrame {
 		btn_login.setBounds(300, 110, 100, 30);
 		btn_register = new JButton("Register");
 		btn_register.setBounds(100, 110, 100, 30);
-		t_username = new JTextField("username");
+		t_username = new JTextField("user1");
 		t_username.setBounds(5, 10, 400, 25);
-		t_password = new JTextField("password");
+		t_password = new JTextField("user");
 		t_password.setBounds(5, 80, 400, 25);
 
 		this.getContentPane().add(btn_login);
@@ -57,8 +68,15 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btn_login) {
-			final LoggedFrame haupt = new LoggedFrame() ;
+			rest= new server();
+			con.setUsername(t_username.getText());
+			//con.setPassword(t_password.getText());
+			
+				System.out.println(con.getUsername());
+			
+			new LoggedFrame() ;
 			dispose();
+			
 		
 
 			
