@@ -1,5 +1,6 @@
 package resources;
 
+//REST Ressource für orte.xml
 import helper.marsh;
 
 import java.io.FileNotFoundException;
@@ -21,27 +22,24 @@ import jaxb.Orteliste;
 
 import org.xml.sax.SAXException;
 
-
-
-
-
 @Path("orte")
 public class orteressource {
 
-	
-public static marsh xml;
-	
+	public static marsh xml;
+
 	public orteressource() throws JAXBException {
 		xml = new marsh();
-}
+	}
 	
-
+	//Get Liste aller Orte
 	@GET
 	@Produces("application/xml")
-	public Orteliste getOrte() throws JAXBException, SAXException{
+	public Orteliste getOrte() throws JAXBException, SAXException {
 		return xml.unmarshalOrt();
 	}
 
+	//Get einzelnen Ort
+	//PathParam = ID
 	@GET
 	@Path("{id}")
 	@Produces("application/xml")
@@ -54,8 +52,8 @@ public static marsh xml;
 
 		int paramId = ortID.intValue();
 		for (Orteliste.Ort each : orte.getOrt()) {
-			if (each.getOrtID().intValue() == paramId) { 
-															// == paramId)
+			if (each.getOrtID().intValue() == paramId) {
+				// == paramId)
 				ort = each;
 
 				returnOrt.getOrt().add(ort);
@@ -66,14 +64,18 @@ public static marsh xml;
 		return orte;
 	}
 
+	//Bearbeiten von  einzelnen Orten
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	public void setOrt(Orteliste temp) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
-		Orteliste orte =xml.unmarshalOrt();
+		Orteliste orte = xml.unmarshalOrt();
 		int index = 0;
 		boolean achive = false;
 		int queryId = Integer.parseInt(temp.getOrt().get(0).getPlatz());
+		
+
+		//Orteliste durchlaufen bis passende ID gefunden
 		for (Orteliste.Ort each : orte.getOrt()) {
 			if (Integer.parseInt(each.getPlatz()) == queryId) {
 				index = orte.getOrt().indexOf(each);
@@ -88,7 +90,8 @@ public static marsh xml;
 		}
 		xml.marshalOrt(orte);
 	}
-
+	
+	//Neuen Ort hinzufügen
 	@POST
 	// @Path("post")
 	@Consumes(MediaType.APPLICATION_XML)
@@ -105,13 +108,15 @@ public static marsh xml;
 		}
 		xml.marshalOrt(ortList);
 	}
-
+	//Ort löschen
 	@DELETE
 	@Path("{id}")
-	public void deleteOrt(@PathParam("id") BigInteger ortID) throws JAXBException,
-			FileNotFoundException, SAXException {
+	public void deleteOrt(@PathParam("id") BigInteger ortID)
+			throws JAXBException, FileNotFoundException, SAXException {
 		int paramId = ortID.intValue();
 		Orteliste orte = xml.unmarshalOrt();
+		
+		//Orte durchlaufen bis ID gefunden
 		for (Orteliste.Ort each : orte.getOrt()) {
 			if (each.getOrtID().intValue() == paramId) {
 				orte.getOrt().remove(each);
@@ -120,16 +125,15 @@ public static marsh xml;
 		}
 		xml.marshalOrt(orte);
 	}
-
 	
+	//Methode zum berechnen der näcshten ID
 	public static int getNextId() throws JAXBException {
-		//int count = xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
-		//count++;
+		// int count = xml.unmarshalOrt().getOrt().get(0).getOrtID().intValue();
+		// count++;
 
-		//return count=;
+		// return count=;
 		return 5;
 
 	}
-	
-	
+
 }

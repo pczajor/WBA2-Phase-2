@@ -1,4 +1,5 @@
 package resources;
+//REST Ressource für event.xml
 
 import helper.marsh;
 
@@ -29,13 +30,16 @@ public class eventsresource {
 	public eventsresource() throws JAXBException {
 		xml = new marsh();
 	}
-
+	
+	//Get Liste aller Events
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Events getEvents() throws JAXBException, SAXException {
 		return xml.unmarshalEvent();
 	}
 
+	//Get einzelnes Event
+	//PathParam = ID
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
@@ -59,7 +63,8 @@ public class eventsresource {
 		}
 		return events;
 	}
-
+	
+	//Bearbeiten von  einzelnen Events
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	public void setEvent(Events temp) throws JAXBException,
@@ -68,6 +73,8 @@ public class eventsresource {
 		int index = 0;
 		boolean achive = false;
 		int queryId = temp.getEvent().get(0).getEventID().intValue();
+		
+		//Eventliste durchlaufen bis passende ID gefunden
 		for (Events.Event each : veranstaltungen.getEvent()) {
 			if (each.getEventID().intValue() == queryId) {
 				index = veranstaltungen.getEvent().indexOf(each);
@@ -83,6 +90,7 @@ public class eventsresource {
 		xml.marshalEvent(veranstaltungen);
 	}
 
+	//Neues Event hinzufügen
 	@POST
 	// @Path("post")
 	@Consumes(MediaType.APPLICATION_XML)
@@ -99,13 +107,15 @@ public class eventsresource {
 		}
 		xml.marshalEvent(eventList);
 	}
-
+	//Spieler löschen
 	@DELETE
 	@Path("{id}")
 	public void deleteEvent(@PathParam("id") BigInteger eventID) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = eventID.intValue();
 		Events events = xml.unmarshalEvent();
+		
+		//Eventliste durchlaufen bis ID/Telefonnummer gefunden
 		for (Events.Event each : events.getEvent()) {
 			if (each.getEventID().intValue() == paramId) {
 				events.getEvent().remove(each);
@@ -115,6 +125,7 @@ public class eventsresource {
 		xml.marshalEvent(events);
 	}
 
+	//Methode zum berechnen der näcshten ID
 	public static int getNextId() throws JAXBException {
 		int count = xml.unmarshalEvent().getEvent().get(0).getEventID().intValue();
 		count++;

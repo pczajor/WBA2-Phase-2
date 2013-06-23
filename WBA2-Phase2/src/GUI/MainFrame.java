@@ -5,10 +5,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.math.BigInteger;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -30,20 +33,28 @@ public class MainFrame extends JFrame {
 		final JButton btn_login = new JButton("Login");
 		JButton btn_register = new JButton("Register");
 		final JTextField t_username;
-		final JTextField t_password;
+		final JPasswordField t_password;
+		final JLabel l_username;
+		JLabel l_password;
 
 		this.getContentPane().setLayout(null);
 		btn_login.setBounds(300, 110, 100, 30);
 		btn_register.setBounds(100, 110, 100, 30);
+		l_username = new JLabel("Username");
+		l_username.setBounds(5, 10, 400, 25);
 		t_username = new JTextField("user1");
-		t_username.setBounds(5, 10, 400, 25);
-		t_password = new JTextField("user");
+		t_username.setBounds(5, 35, 400, 25);
+		l_password = new JLabel("Passwort");
+		l_password.setBounds(5, 60, 400, 25);
+		t_password = new JPasswordField("user");
 		t_password.setBounds(5, 80, 400, 25);
 
 		this.getContentPane().add(btn_login);
 		this.getContentPane().add(t_username);
 		this.getContentPane().add(t_password);
 		this.getContentPane().add(btn_register);
+		this.getContentPane().add(l_username);
+		this.getContentPane().add(l_password);
 
 		ActionListener al = new ActionListener() {
 			@Override
@@ -141,23 +152,30 @@ public class MainFrame extends JFrame {
 			btn_zurueck.setBounds(300, 633, 100, 25);
 			this.getContentPane().add(btn_zurueck);
 
-			final JButton btn_browse_events = new JButton("Browse Events");
-			final JButton btn_browse_orte = new JButton("Browse Orte");
+			final JButton btn_browse_events = new JButton("EvenIDt");
+			final JButton btn_browse_orte = new JButton("OrtID");
 			final JButton btn_browse_subscribtions = new JButton(
 					"Browse Subscribtions");
-
+			final JButton btn_browse_nodes =new JButton("Show all Nodes");
+			final JTextField t_EventID = new JTextField();
+			final JTextField t_OrteID = new JTextField();
 			final JTextArea a_Inhalt = new JTextArea();
 			a_Inhalt.setBounds(20, 100, 360, 530);
 			this.getContentPane().add(a_Inhalt);
 
-			btn_browse_events.setBounds(50, 50, 150, 25);
-			btn_browse_orte.setBounds(210, 50, 150, 25);
-			btn_browse_subscribtions.setBounds(50, 20, 310, 25);
+			btn_browse_events.setBounds(50, 50, 75, 25);
+			t_EventID.setBounds(125,50,75,25);
+			btn_browse_orte.setBounds(210, 50, 75, 25);
+			t_OrteID.setBounds(285,50,75,25);
+			btn_browse_subscribtions.setBounds(50, 20, 150, 25);
+			btn_browse_nodes.setBounds(210, 20, 150, 25);
 
 			this.getContentPane().add(btn_browse_events);
+			this.getContentPane().add(t_EventID);
 			this.getContentPane().add(btn_browse_orte);
 			this.getContentPane().add(btn_browse_subscribtions);
-
+			this.getContentPane().add(btn_browse_nodes);
+			this.getContentPane().add(t_OrteID);
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 700);
 
@@ -174,6 +192,13 @@ public class MainFrame extends JFrame {
 					}
 					if (e.getSource() == btn_browse_orte) {
 						a_Inhalt.setText(con.getAllNodes().toString());
+					}
+					if(e.getSource() == btn_browse_events){
+						BigInteger id = new BigInteger(t_EventID.getText());
+						a_Inhalt.setText(con.getEvent(id));					}
+					if(e.getSource() == btn_browse_orte){
+						BigInteger id = new BigInteger(t_EventID.getText());
+						a_Inhalt.setText(con.getOrt(id));		
 					}
 				}
 			};
@@ -614,11 +639,11 @@ public class MainFrame extends JFrame {
 		public SubscribeFrame() {
 			this.getContentPane().setLayout(null);
 
-			JTextField t_Inhalt = new JTextField("Inhalt");
+			JTextArea t_Inhalt = new JTextArea("Inhalt");
 			t_Inhalt.setBounds(20, 20, 360, 530);
 			this.getContentPane().add(t_Inhalt);
 
-			JButton btn_subscribe_to;
+			final JButton btn_subscribe_to;
 			btn_subscribe_to = new JButton("Subscribe!");
 			btn_subscribe_to.setBounds(20, 600, 360, 25);
 
@@ -626,7 +651,7 @@ public class MainFrame extends JFrame {
 			l_nodeName.setBounds(50, 570, 150, 25);
 			this.getContentPane().add(l_nodeName);
 
-			JTextField t_nodeName = new JTextField("");
+			final JTextField t_nodeName = new JTextField("");
 			t_nodeName.setBounds(210, 570, 150, 25);
 			this.getContentPane().add(t_nodeName);
 
@@ -638,6 +663,15 @@ public class MainFrame extends JFrame {
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 720);
+			
+			List<String> liste = con.getSubscribedNodes();
+			String listString = "";
+
+			for (String s : liste)
+			{
+			    listString += s + "\t";
+			}
+			 t_Inhalt.setText(listString);
 
 			ActionListener al = new ActionListener() {
 				@Override
@@ -647,6 +681,10 @@ public class MainFrame extends JFrame {
 						new LoggedFrame();
 						setVisible(false);
 					}
+						if(e.getSource() == btn_subscribe_to){
+							con.subscribeNode(t_nodeName.getText());
+						}
+					
 				}
 
 			};
@@ -714,18 +752,18 @@ public class MainFrame extends JFrame {
 		public UnsubscribeFrame() {
 			this.getContentPane().setLayout(null);
 
-			JTextField t_Inhalt = new JTextField("Inhalt");
+			final JTextArea t_Inhalt = new JTextArea("Inhalt");
 			t_Inhalt.setBounds(20, 20, 360, 530);
 			this.getContentPane().add(t_Inhalt);
 
-			JButton btn_unsubscribe_to = new JButton("Unsubscribe!");
+			final JButton btn_unsubscribe_to = new JButton("Unsubscribe!");
 			btn_unsubscribe_to.setBounds(20, 600, 360, 25);
 
 			JLabel l_nodeName = new JLabel("Nodename:");
 			l_nodeName.setBounds(50, 570, 150, 25);
 			this.getContentPane().add(l_nodeName);
 
-			JTextField t_nodeName = new JTextField("");
+			final JTextField t_nodeName = new JTextField("");
 			t_nodeName.setBounds(210, 570, 150, 25);
 			this.getContentPane().add(t_nodeName);
 
@@ -737,6 +775,16 @@ public class MainFrame extends JFrame {
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 720);
+			
+			
+			List<String> liste = con.getSubscribedNodes();
+			String listString = "";
+
+			for (String s : liste)
+			{
+			    listString += s + "\t";
+			}
+			 t_Inhalt.setText(listString);
 
 			ActionListener al = new ActionListener() {
 				@Override
@@ -745,6 +793,9 @@ public class MainFrame extends JFrame {
 					if (e.getSource() == btn_zurueck) {
 						new LoggedFrame();
 						setVisible(false);
+					}
+					if(e.getSource() == btn_unsubscribe_to){
+						con.unsubscribeNode(t_nodeName.getText(), null);
 					}
 				}
 
@@ -850,6 +901,7 @@ public class MainFrame extends JFrame {
 			final JLabel l_blacklsitNummer = new JLabel("Blacklistnummern:");
 			final JLabel l_adminName = new JLabel("Adminname:");
 			final JLabel l_adminNummer = new JLabel("Adminnummer:");
+			final JTextField t_id = new JTextField("ID");
 
 			int x = 210, y = 60;
 			t_nodeName.setBounds(210, y, 110, 25);
@@ -934,18 +986,21 @@ public class MainFrame extends JFrame {
 			btn_zurueck.setBounds(300, 633, 100, 25);
 			this.getContentPane().add(btn_zurueck);
 
-			final JButton btn_publish_event = new JButton("Publish Event");
-			final JButton btn_publish_ort = new JButton("Publish Ort");
+			final JButton btn_publish_event = new JButton("Event bearbeiten");
+			final JButton btn_publish_ort = new JButton("Ort bearbeiten");
 			final JButton btn_veraendern = new JButton("Verändern!");
 
 			btn_veraendern.setBounds(50, 600, 310, 25);
-			btn_publish_event.setBounds(50, 20, 150, 25);
-			btn_publish_ort.setBounds(210, 20, 150, 25);
+			btn_publish_event.setBounds(50, 20, 75, 25);
+			btn_publish_ort.setBounds(300, 20, 75, 25);
+			t_id.setBounds(175, 20, 80, 27);
 
 			this.getContentPane().add(btn_publish_event);
 			this.getContentPane().add(btn_publish_ort);
 			this.getContentPane().add(btn_veraendern);
-
+			this.getContentPane().add(t_id);
+			
+			
 			t_nodeName.setVisible(false);
 			t_von.setVisible(false);
 			t_bis.setVisible(false);
@@ -1090,18 +1145,18 @@ public class MainFrame extends JFrame {
 
 						if (ortp == true) {
 							try {
-								con.publishOrt(t_nodeName.getText(),
+								con.putOrt(t_nodeName.getText(),
 										t_Ort.getText(), t_o_Platz.getText(),
 										t_o_von.getText(), t_o_bis.getText(),
 										t_o_minS.getText(), t_o_maxS.getText(),
-										t_o_ga.getText(), t_o_Preis.getText());
+										t_o_ga.getText(), t_o_Preis.getText(), t_id.getText());
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						} else {
 							try {
-								con.publishEvent(t_nodeName.getText(),
+								con.putEvent(t_nodeName.getText(),
 										t_Ort.getText(), oID,
 										t_o_Platz.getText(), t_von.getText(),
 										t_bis.getText(), t_sportart.getText(),
@@ -1111,7 +1166,7 @@ public class MainFrame extends JFrame {
 										Spieler, tSpieler,
 										t_adminName.getText(),
 										t_adminNummer.getText(), Spieler,
-										tSpieler);
+										tSpieler, t_id.getText());
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();

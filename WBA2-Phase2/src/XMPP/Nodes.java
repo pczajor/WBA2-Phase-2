@@ -91,7 +91,7 @@ public class Nodes {
 		}
 		blacklist+="</Backlist>";
 		
-		//StringBuilder um einen String zubauen (von Eclipse vorgeschlagen)
+		//StringBuilder um einen String zubauen
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("<events>");
 		stringBuilder.append("<event>");
@@ -211,6 +211,157 @@ public class Nodes {
 		return false;
 	}
 	
+	//Event bearbeiten
+	public boolean putEvent(String nodeName, String Ort, String oID, String Platz, String von, String bis, String sportart, String minS, String maxS, String gV, String gB, String ga,
+			String preis, String[] Spieler, String[] tNr,  String aSpieler, String atNr, String[] bSpieler, String[] btNr, String id) throws Exception{
+		//ID generieren
+		
+		
+		
+		
+		//Array für die Spielerliste anlegen
+		String spielerliste="<Spielerliste>";
+		
+		//Spieler  in das Array eintragen
+		for (int i=0; i<Spieler.length;i++){			
+			spielerliste+= "<Spieler>" +
+					"<Anzeigename>" + Spieler[i] + "</Anzeigename>" +
+					"<Telefonnummer>" + tNr[i] + "</Telefonnummer>" +
+				"</Spieler>" ;			
+		}
+		spielerliste+="</Spielerliste>";
+		
+		//Siehe Spielerliste
+		String blacklist="<Backlist>";
+		
+		for (int i=0; i<Spieler.length;i++){			
+			blacklist+= "<Spieler>" +
+					"<Anzeigename>" + bSpieler[i] + "</Anzeigename>" +
+					"<Telefonnummer>" + btNr[i] + "</Telefonnummer>" +
+				"</Spieler>" ;			
+		}
+		blacklist+="</Backlist>";
+		
+		//StringBuilder um einen String zubauen
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("<events>");
+		stringBuilder.append("<event>");
+		stringBuilder.append("<Event-ID>");
+		stringBuilder.append(id);
+		stringBuilder.append("</Event-ID>");
+		stringBuilder.append("<Spielzeitraum>");
+		stringBuilder.append("<von>");
+		stringBuilder.append(von);
+		stringBuilder.append("</von>");
+		stringBuilder.append("<bis>");
+		stringBuilder.append(bis);
+		stringBuilder.append("</bis>");
+		stringBuilder.append("</Spielzeitraum>");
+		stringBuilder.append("<Sportart>");
+		stringBuilder.append(sportart);
+		stringBuilder.append("</Sportart>");
+		stringBuilder.append("<Oertlichkeit>");
+		stringBuilder.append("<Ort-ID>");
+		stringBuilder.append(oID);
+		stringBuilder.append("</Ort-ID>");
+		stringBuilder.append("<Ort>");
+		stringBuilder.append(Ort);
+		stringBuilder.append("</Ort>");
+		stringBuilder.append("<Platz>");
+		stringBuilder.append(Platz);
+		stringBuilder.append("</Platz>");
+		stringBuilder.append("<min.Spieleranzahl>");
+		stringBuilder.append(minS);
+		stringBuilder.append("</min.Spieleranzahl>");
+		stringBuilder.append("<max.Spieleranzahl>");
+		stringBuilder.append(maxS);
+		stringBuilder.append("</max.Spieleranzahl>");
+		stringBuilder.append("<Oeffnungszeiten>");
+		stringBuilder.append("<geoeffnet_von>");
+		stringBuilder.append(gV);
+		stringBuilder.append("</geoeffnet_von>");
+		stringBuilder.append("<geoeffnet_bis>");
+		stringBuilder.append(gB);
+		stringBuilder.append("</geoeffnet_bis>");
+		stringBuilder.append("<geschlossen_an>");
+		stringBuilder.append(ga);
+		stringBuilder.append("</geschlossen_an>");
+		stringBuilder.append("</Oeffnungszeiten>");
+		stringBuilder.append("<Preis>");
+		stringBuilder.append(preis);
+		stringBuilder.append("</Preis>");
+		stringBuilder.append("</Oertlichkeit>");
+		stringBuilder.append(spielerliste);
+		stringBuilder.append(blacklist);
+		stringBuilder.append("<Admin>");
+		stringBuilder.append("<Anzeigename>");
+		stringBuilder.append(aSpieler);
+		stringBuilder.append("</Anzeigename>");
+		stringBuilder.append("<Telefonnummer>");
+		stringBuilder.append(atNr);
+		stringBuilder.append("</Telefonnummer>");
+		stringBuilder.append("</Admin>");
+		stringBuilder.append("</event>");
+		stringBuilder.append("</events>");
+		
+		//stringBuilder in String
+		//rEvent = String für REST
+		String rEvent= stringBuilder.toString() ;
+		
+		//xEvent = String für XMPP
+		String xEvent= "<events>"+"<event>"+
+							"<Event-ID>"+id+"</Event-ID>" +
+							"<Spielzeitraum>" +
+								"<von>"+ von +"</von>" +
+								"<bis>"+ bis +"</bis>" +
+								"</Spielzeitraum>" +
+								"<Sportart>"+ sportart +"</Sportart>" +
+								"<Oertlichkeit>" +
+									"<Ort>"+ Ort +"</Ort>" +
+									"<Platz>"+ Platz +"</Platz>"+
+									"<Preis>"+ preis +"</Preis>" +
+								"</Oertlichkeit>" + 
+							spielerliste+
+							"<Admin>" +
+								"<Anzeigename>"+ aSpieler +"</Anzeigename>" +
+								"<Telefonnummer>"+ atNr +"</Telefonnummer>" +
+							"</Admin>" +
+						"</event>"+"</events>";
+		
+		//REST Client und POST
+		try{
+			restClient= Client.create();
+			webResource=restClient.resource("http://"+getServer()+":"+ getPort()+"/events");
+			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).put(ClientResponse.class, rEvent);
+			
+			
+			//204 NO CONTENT
+			if(response.getStatus()==204){
+				
+				LeafNode node=null;
+			
+				try{
+					
+					//Payload
+					node=mgr.getNode(nodeName);
+					SimplePayload sp= new SimplePayload(nodeName,"", xEvent);
+					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
+				
+					node.publish(pi);
+					return true;
+				
+				}
+				catch (XMPPException e) {
+					return false;
+				}
+			} 
+		}
+		catch(Exception e){
+			 return false;
+		}
+		return false;
+	}
+	
 	
 	//Ort veröffentlichen
 	public boolean publishOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS, String ga, String Preis) throws Exception{
@@ -256,6 +407,80 @@ public class Nodes {
 			restClient= Client.create();
 			webResource=restClient.resource("http://"+getServer()+":"+getPort()+"/orte");
 			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rOrte);
+			
+			
+			//204 NO CONTENT
+			if(response.getStatus()==204){
+				
+				LeafNode node=null;
+			
+				try{
+					node=mgr.getNode(nodeName);
+					SimplePayload sp= new SimplePayload(nodeName,"", xOrte);
+					//Payload
+					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
+				
+					node.publish(pi);
+					return true;
+				
+				}
+				catch (XMPPException e) {
+					return false;
+				}
+			} 
+		}
+		catch(Exception e){
+			 return false;
+		}
+		return false;
+	}
+	
+	
+	//Ort bearbeiten
+
+	public boolean putOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS, String ga, String Preis, String id) throws Exception{
+		
+		//ID generieren
+		
+		//createLeafNode(nodeName);
+		
+		//rOrte = String für REST
+		String rOrte = "<Orte>"+
+						"<Ort>"+
+							"<Ort-ID>"+id+"</Ort-ID>"+
+							"<Ort>"+ Ort +"</Ort>"+
+							"<Platz>"+ Platz +"</Platz>"+
+							"<min.Spieleranzahl>"+ minS +"</min.Spieleranzahl>"+
+							"<max.Spieleranzahl>"+ maxS +"</max.Spieleranzahl>"+
+							"<Oeffnungszeiten>"+
+								"<geoeffnet_von>"+ von +"</geoeffnet_von>"+
+								"<geoeffnet_bis>"+ bis +"</geoeffnet_bis>"+
+								"<geschlossen_an>"+ ga +"</geschlossen_an>"+
+							"</Oeffnungszeiten>"+
+							"<Preis>"+ Preis+ "</Preis>"+
+						"</Ort>"+"</Orte>";
+		
+		
+		//xOrte = String für XMPP
+		String xOrte = "<Orte>"+
+							"<Ort>"+
+								"<Ort>"+ Ort +"</Ort>"+
+								"<Platz>"+ Platz +"</Platz>"+
+								"<min.Spieleranzahl>"+ minS +"</min.Spieleranzahl>"+
+								"<max.Spieleranzahl>"+ maxS +"</max.Spieleranzahl>"+
+								"<Oeffnungszeiten>"+
+									"<geoeffnet_von>"+ von +"</geoeffnet_von>"+
+									"<geoeffnet_bis>"+ bis +"</geoeffnet_bis>"+
+									"<geschlossen_an>"+ ga +"</geschlossen_an>"+
+								"</Oeffnungszeiten>"+
+								"<Preis>"+ Preis +"</Preis>"+
+						"</Ort>"+"</Orte>";
+			
+		//REST Client und POST
+		try{
+			restClient= Client.create();
+			webResource=restClient.resource("http://"+getServer()+":"+getPort()+"/orte");
+			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).put(ClientResponse.class, rOrte);
 			
 			
 			//204 NO CONTENT
