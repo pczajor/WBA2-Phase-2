@@ -6,7 +6,7 @@ import com.sun.jersey.api.container.grizzly.GrizzlyServerFactory;
 public class server {
 	
 
-
+	//Grizzlyserver
 	public static void main(String[] args) throws Exception {
 
 		String url = (args.length > 0) ? args[0] : "http://localhost:4434";
