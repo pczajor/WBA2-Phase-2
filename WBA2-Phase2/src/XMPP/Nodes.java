@@ -37,7 +37,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import XMPP.connection;
-//test
+
 public class Nodes {
 	public  XMPPConnection connection;
 	public   PubSubManager mgr;
@@ -51,6 +51,9 @@ public class Nodes {
 	private String URL;
 	public static ItemEventListener<Item> listener;
 	
+	
+	//Verbinden mit dem Server
+	//Hostname und Port in Config.java
 	public  void connect() throws Exception{
 		ConnectionConfiguration config = new ConnectionConfiguration(Config.server,
 				Config.port);
@@ -59,14 +62,20 @@ public class Nodes {
 		connection.connect();
 		
 	}
-
+	//Event veröffentlichen
+	//Parameter werden in der GUI eingegeben
+	//Spieler werden einzeln eingetragen und in einem Array gespeichert
 	public boolean publishEvent(String nodeName, String Ort, String oID, String Platz, String von, String bis, String sportart, String minS, String maxS, String gV, String gB, String ga,
 			String preis, String[] Spieler, String[] tNr,  String aSpieler, String atNr, String[] bSpieler, String[] btNr) throws Exception{
-		
+		//ID generieren
 		BigInteger id = BigInteger.valueOf(resources.eventsresource.getNextId());
 		
+		
+		
+		//Array für die Spielerliste anlegen
 		String spielerliste="<Spielerliste>";
 		
+		//Spieler  in das Array eintragen
 		for (int i=0; i<Spieler.length;i++){			
 			spielerliste+= "<Spieler>" +
 					"<Anzeigename>" + Spieler[i] + "</Anzeigename>" +
@@ -75,6 +84,7 @@ public class Nodes {
 		}
 		spielerliste+="</Spielerliste>";
 		
+		//Siehe Spielerliste
 		String blacklist="<Backlist>";
 		
 		for (int i=0; i<Spieler.length;i++){			
@@ -85,7 +95,7 @@ public class Nodes {
 		}
 		blacklist+="</Backlist>";
 		
-		
+		//StringBuilder um einen String zubauen (von Eclipse vorgeschlagen)
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("<events>");
 		stringBuilder.append("<event>");
@@ -146,8 +156,12 @@ public class Nodes {
 		stringBuilder.append("</Admin>");
 		stringBuilder.append("</event>");
 		stringBuilder.append("</events>");
+		
+		//stringBuilder in String
+		//rEvent = String für REST
 		String rEvent= stringBuilder.toString() ;
 		
+		//xEvent = String für XMPP
 		String xEvent= "<events>"+"<event>"+
 							"<Event-ID>"+id+"</Event-ID>" +
 							"<Spielzeitraum>" +
@@ -166,16 +180,22 @@ public class Nodes {
 								"<Telefonnummer>"+ atNr +"</Telefonnummer>" +
 							"</Admin>" +
 						"</event>"+"</events>";
+		
+		//REST Client und POST
 		try{
 			restClient= Client.create();
 			webResource=restClient.resource("http://"+getServer()+":"+ getPort()+"/events");
 			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rEvent);
 			
+			
+			//204 NO CONTENT
 			if(response.getStatus()==204){
 				
 				LeafNode node=null;
 			
 				try{
+					
+					//Payload
 					node=mgr.getNode(nodeName);
 					SimplePayload sp= new SimplePayload(nodeName,"", xEvent);
 					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
@@ -195,11 +215,15 @@ public class Nodes {
 		return false;
 	}
 	
+	
+	//Ort veröffentlichen
 	public boolean publishOrt(String nodeName, String Ort, String Platz, String von, String bis, String minS, String maxS, String ga, String Preis) throws Exception{
 	
-		
+		//ID generieren
 		BigInteger id = BigInteger.valueOf(resources.orteressource.getNextId());
 		
+		
+		//rOrte = String für REST
 		String rOrte = "<Orte>"+
 						"<Ort>"+
 							"<Ort-ID>"+id+"</Ort-ID>"+
@@ -215,6 +239,8 @@ public class Nodes {
 							"<Preis>"+ Preis+ "</Preis>"+
 						"</Ort>"+"</Orte>";
 		
+		
+		//xOrte = String für XMPP
 		String xOrte = "<Orte>"+
 							"<Ort>"+
 								"<Ort>"+ Ort +"</Ort>"+
@@ -229,11 +255,14 @@ public class Nodes {
 								"<Preis>"+ Preis +"</Preis>"+
 						"</Ort>"+"</Orte>";
 			
+		//REST Client und POST
 		try{
 			restClient= Client.create();
 			webResource=restClient.resource("http://"+getServer()+":"+getPort()+"/orte");
 			ClientResponse response=webResource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, rOrte);
 			
+			
+			//204 NO CONTENT
 			if(response.getStatus()==204){
 				
 				LeafNode node=null;
@@ -241,6 +270,7 @@ public class Nodes {
 				try{
 					node=mgr.getNode(nodeName);
 					SimplePayload sp= new SimplePayload(nodeName,"", xOrte);
+					//Payload
 					PayloadItem<SimplePayload> pi = new PayloadItem<SimplePayload>(id.toString(),sp);
 				
 					node.publish(pi);
@@ -258,6 +288,8 @@ public class Nodes {
 		return false;
 	}
 	
+	
+	//Node abonnieren
  	public boolean subscribeNode(String nodeName){
 		LeafNode node = null;
 		try {
@@ -271,7 +303,7 @@ public class Nodes {
 		}
 		
 	}
-	
+	//Node abbestellen
 	public boolean unsubscribeNode(String nodeName, ItemEventListener<Item> item){
 		LeafNode node = null;
 		try{
@@ -288,7 +320,7 @@ public class Nodes {
 		
 		
 	}
-	
+	//Liste alles abonnierten Nodes
 	public List<String> getSubscribedNodes() {
 		List<String> entries = new ArrayList<String>();
 		
@@ -304,7 +336,8 @@ public class Nodes {
 		}
 		return entries;
 		}
-		
+	
+	//Liste aller Nodes
 	public List<String> getAllNodes() {
 
 		List<String> entries = new ArrayList<String>();
@@ -323,10 +356,12 @@ public class Nodes {
 
 		return entries;
 	}
-
+	
+	//Leafnode erstellen
 	public boolean createLeafNode(String leafnodeName) {
 
 		LeafNode leafNode = null;
+		//Config
 		ConfigureForm nodeConfig = new ConfigureForm(FormType.submit);
 		nodeConfig.setAccessModel(AccessModel.open);
 		nodeConfig.setDeliverPayloads(true);
@@ -338,6 +373,7 @@ public class Nodes {
 		nodeConfig.setNodeType(NodeType.leaf);
 
 		try {
+			//Wenn Node nicht gefunden dann neuen erstellen
 			leafNode = mgr.getNode(leafnodeName);
 		} catch (XMPPException ex) {
 			System.err.println("Node nicht gefunden!");
@@ -357,6 +393,7 @@ public class Nodes {
 		return true;
 	}
 	
+	//Node löschen
 	public void deleteNode(String nodeName) throws XMPPException{
 		mgr.deleteNode(nodeName);
 	}
@@ -368,7 +405,8 @@ public class Nodes {
 		webResource.type("application/xml");
 		return webResource;
 	}*/
-
+	
+	//Account ausgeben
 	public String getAccount(String id) {
 		String temp = "";
 
@@ -387,7 +425,8 @@ public class Nodes {
 		return temp;
 
 	}
-
+	
+	//Ort ausgeben
 	public String getOrt(BigInteger id) {
 		String temp = "";
 
@@ -413,7 +452,8 @@ public class Nodes {
 				+ "\n" + "Preis: " + ort.getOrt().get(0).getPreis() + "\n";
 		return temp;
 	}
-
+	
+	//Event ausgeben
 	public String getEvent(BigInteger id) {
 		String temp = "";
 
@@ -451,13 +491,13 @@ public class Nodes {
 	
 	
 	
-	
+	//User registrieren über AccountManager am
 	public void registerUser(String username, String password, Map<String, String> attribute) throws XMPPException{
 		
 		am.createAccount(username, password, attribute);
 		
 	}
-
+	//login
 	public void login() throws XMPPException {
 		try
 		{
@@ -469,40 +509,47 @@ public class Nodes {
 		}
 	
 	}
-
+	//Verbindung zum Server trennen
 	public void disconnect() {
 		connection.disconnect();
 	}
 	
-	
+	//Username wiedergeben
 	public String getUsername() {
 		return username;
 	}
-
+	
+	//Username übergeben
 	public  void setUsername(String username) {
 		this.username = username;
 	}
-
+	
+	//Server wiedergeben
 	public String getServer() {
 		return Config.server;
 	}
 
-
+	//Port wiedergeben
 	public  int getPort() {
 		return Config.port;
 	}
 
-
+	//Password übergeben
 	public String getPassword() {
 		return password;
 	}
 	
 
-
+	//Passwort übergeben
 	public  void setPassword(String password) {
 		this.password = password;
 	}
-	/*
+	/*Java Swing Beispiel
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * public static void main(String args[]) throws XMPPException, IOException
 	 * { // declare variables Nodes c = new Nodes(); BufferedReader br = new
 	 * BufferedReader(new InputStreamReader(System.in)); //String msg;
