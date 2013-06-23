@@ -37,7 +37,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import XMPP.connection;
-
+//test
 public class Nodes {
 	public  XMPPConnection connection;
 	public   PubSubManager mgr;
