@@ -1,7 +1,16 @@
 package XMPP;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBException;
+
+import jaxb.Accountliste;
+import jaxb.Events;
+import jaxb.Orteliste;
 
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -21,22 +30,9 @@ import org.jivesoftware.smackx.pubsub.SimplePayload;
 import org.jivesoftware.smackx.pubsub.Subscription;
 import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 
-import javax.ws.rs.core.MediaType;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import jaxb.Accountliste;
-import jaxb.Events;
-import jaxb.Orteliste;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import XMPP.connection;
 
 public class Nodes {
 	public  XMPPConnection connection;
@@ -221,7 +217,7 @@ public class Nodes {
 	
 		//ID generieren
 		BigInteger id = BigInteger.valueOf(resources.orteressource.getNextId());
-		
+		createLeafNode(nodeName);
 		
 		//rOrte = String für REST
 		String rOrte = "<Orte>"+

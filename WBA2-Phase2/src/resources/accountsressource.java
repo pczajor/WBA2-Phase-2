@@ -1,5 +1,6 @@
 package resources;
 
+//REST Ressource für Accounts.xml
 import helper.marsh;
 
 import java.io.FileNotFoundException;
@@ -28,14 +29,16 @@ public class accountsressource {
 	public accountsressource() throws JAXBException {
 		this.xml = new marsh();
 	}
-
+	
+	//Get Liste aller Accounts
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Accountliste getAccounts() throws JAXBException, SAXException {
 			return this.xml.unmarshalSpieler();
 		
 	}
-
+	//Get einzelnen Account
+	//PathParam = ID
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
@@ -59,7 +62,8 @@ public class accountsressource {
 
 		return accounts;
 	}
-
+	
+	//Bearbeiten von  einzelnen Spielern
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	public void setSpieler(Accountliste temp) throws JAXBException,
@@ -69,6 +73,8 @@ public class accountsressource {
 		boolean achive = false;
 		int queryId = Integer.parseInt(temp.getSpieler().get(0)
 				.getTelefonnummer());
+		
+		//Accountliste durchlaufen bis passende ID gefunden
 		for (Accountliste.Spieler use : accounts.getSpieler()) {
 			if (Integer.parseInt(use.getTelefonnummer()) == queryId) {
 				index = accounts.getSpieler().indexOf(use);
@@ -84,7 +90,7 @@ public class accountsressource {
 		this.xml.marshalSpieler(accounts);
 	}
 	@POST
-	// @Path("post")
+	//Neuen Spieler hinzufügen
 	@Consumes(MediaType.APPLICATION_XML)
 	public void createSpieler(Accountliste s) throws JAXBException,
 			FileNotFoundException, SAXException, DatatypeConfigurationException {
@@ -99,13 +105,15 @@ public class accountsressource {
 		}
 		this.xml.marshalSpieler(accountList);
 	}
-
+	//Spieler löschen
 	@DELETE
 	@Path("{id}")
 	public void deleteSpieler(@PathParam("id") String telefonnummer) throws JAXBException,
 			FileNotFoundException, SAXException {
 		int paramId = Integer.parseInt(telefonnummer);
 		Accountliste spieler = this.xml.unmarshalSpieler();
+		
+		//Spielerliste durchlaufen bis ID/Telefonnummer gefunden
 		for (Accountliste.Spieler each : spieler.getSpieler()) {
 			if (Integer.parseInt(each.getTelefonnummer()) == paramId) {
 				spieler.getSpieler().remove(each);

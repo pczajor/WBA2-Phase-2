@@ -14,7 +14,7 @@ import jaxb.Events;
 import jaxb.Orteliste;
 
 import org.xml.sax.SAXException;
-
+//Klasse zum un/marshalling
 public class marsh {
 
 	JAXBContext spieler;
@@ -22,6 +22,7 @@ public class marsh {
 	JAXBContext ort;
 
 	public marsh() throws JAXBException {
+		//JAXB Kontexte
 		this.spieler = JAXBContext.newInstance(Accountliste.class);
 		this.event = JAXBContext.newInstance(Events.class);
 		this.ort = JAXBContext.newInstance(Orteliste.class);
