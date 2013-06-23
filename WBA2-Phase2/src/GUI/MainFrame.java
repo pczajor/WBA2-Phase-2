@@ -148,13 +148,13 @@ public class MainFrame extends JFrame {
 			btn_zurueck.setBounds(300, 633, 100, 25);
 			this.getContentPane().add(btn_zurueck);
 			
-			JButton btn_browse_events= new JButton("Browse Events");
-			JButton btn_browse_orte= new JButton("Browse Orte");
-			JButton btn_browse_subscribtions= new JButton("Browse Subscribtions");
+			final JButton btn_browse_events= new JButton("Browse Events");
+			final JButton btn_browse_orte= new JButton("Browse Orte");
+			final JButton btn_browse_subscribtions= new JButton("Browse Subscribtions");
 			
 			
 
-			JTextArea a_Inhalt = new JTextArea();
+			final JTextArea a_Inhalt = new JTextArea();
 			a_Inhalt.setBounds(20, 100, 360, 530);
 			this.getContentPane().add(a_Inhalt);
 			
@@ -178,7 +178,12 @@ public class MainFrame extends JFrame {
 						new LoggedFrame();
 						setVisible(false);
 					}
-					
+					if(e.getSource()==btn_browse_subscribtions){
+						a_Inhalt.setText(con.getSubscribedNodes().toString());
+					}
+					if(e.getSource()==btn_browse_orte){
+						a_Inhalt.setText(con.getAllNodes().toString());
+					}
 				}
 			};
 			btn_zurueck.addActionListener(al);
