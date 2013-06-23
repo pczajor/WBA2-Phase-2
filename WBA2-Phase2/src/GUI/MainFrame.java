@@ -28,6 +28,8 @@ public class MainFrame extends JFrame {
 	
 	
 	JButton btn_subscribe;
+
+	JButton btn_unsubscribe;
 	JButton btn_subscribe_to;
 	JButton btn_browse;
 	JButton btn_browse_events;
@@ -634,15 +636,18 @@ public class MainFrame extends JFrame {
 			btn_subscribe = new JButton("Subscribe");
 			btn_browse = new JButton("Browse");
 			btn_verandern= new JButton("Verändern");
+			btn_unsubscribe= new JButton("Unsubscribe");
 
 			btn_publish.setBounds(20, 200, 360, 25);
 			btn_browse.setBounds(20, 250, 360, 25);
 			btn_subscribe.setBounds(20, 300, 360, 25);
-			btn_verandern.setBounds(20, 350, 360, 25);
+			btn_unsubscribe.setBounds(20, 350, 360, 25);
+			btn_verandern.setBounds(20, 400, 360, 25);
 
+			this.getContentPane().add(btn_publish);
 			this.getContentPane().add(btn_browse);
 			this.getContentPane().add(btn_subscribe);
-			this.getContentPane().add(btn_publish);
+			this.getContentPane().add(btn_unsubscribe);
 			this.getContentPane().add(btn_verandern);
 
 			ActionListener al = new ActionListener() {				
