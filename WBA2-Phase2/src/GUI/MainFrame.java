@@ -1,8 +1,9 @@
 package GUI;
 
+import grizzlyserver.server;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.math.BigInteger;
@@ -15,13 +16,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.jivesoftware.smack.XMPPException;
-
-import XMPP.*;
-import grizzlyserver.*;
+import XMPP.Config;
+import XMPP.Nodes;
 
 public class MainFrame extends JFrame {
 
+	// erstellen aller wichtiger Instanzen und Variablen
 	Nodes con = new Nodes();
 	server rest;
 	Config serverCon = new Config();
@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 	boolean ortp = false;
 
 	public MainFrame() {
-
+		// Das Loginfenster
 		final JButton btn_login = new JButton("Login");
 		JButton btn_register = new JButton("Register");
 		final JTextField t_username;
@@ -57,6 +57,8 @@ public class MainFrame extends JFrame {
 		this.getContentPane().add(l_password);
 
 		ActionListener al = new ActionListener() {
+			// wenn die eingegebenen Daten korekt sind, wird der User verbunden
+			// und eingelogt
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btn_login) {
@@ -132,19 +134,19 @@ public class MainFrame extends JFrame {
 
 	public static void main(String[] args) {
 
-		// Make frame
+		// erstellen des Loginfensters
 		MainFrame f = new MainFrame();
 
 		MainFrame theAppWindow = new MainFrame();
 		theAppWindow.setBounds(10, 10, 420, 180);
 		theAppWindow.show();
 
-	} // end of main
+	}
 
 	public class BrowseFrame extends JFrame implements ActionListener
 
 	{
-		// initialises the frame and opens it
+		// initialisiert das Browsefenster und öffnet es
 		public BrowseFrame() {
 			this.getContentPane().setLayout(null);
 
@@ -152,24 +154,27 @@ public class MainFrame extends JFrame {
 			btn_zurueck.setBounds(300, 633, 100, 25);
 			this.getContentPane().add(btn_zurueck);
 
+			// die Elemente auf dem Fenster werden initalisiert.
 			final JButton btn_browse_events = new JButton("EvenIDt");
 			final JButton btn_browse_orte = new JButton("OrtID");
 			final JButton btn_browse_subscribtions = new JButton(
 					"Browse Subscribtions");
-			final JButton btn_browse_nodes =new JButton("Show all Nodes");
+			final JButton btn_browse_nodes = new JButton("Show all Nodes");
 			final JTextField t_EventID = new JTextField();
 			final JTextField t_OrteID = new JTextField();
 			final JTextArea a_Inhalt = new JTextArea();
-			a_Inhalt.setBounds(20, 100, 360, 530);
-			this.getContentPane().add(a_Inhalt);
 
+			// Den Elementen werden ihr Positionen und Größen gegeben
+			a_Inhalt.setBounds(20, 100, 360, 530);
 			btn_browse_events.setBounds(50, 50, 75, 25);
-			t_EventID.setBounds(125,50,75,25);
+			t_EventID.setBounds(125, 50, 75, 25);
 			btn_browse_orte.setBounds(210, 50, 75, 25);
-			t_OrteID.setBounds(285,50,75,25);
+			t_OrteID.setBounds(285, 50, 75, 25);
 			btn_browse_subscribtions.setBounds(50, 20, 150, 25);
 			btn_browse_nodes.setBounds(210, 20, 150, 25);
 
+			// Die Elemente werden dem Fenster hinzugefügt
+			this.getContentPane().add(a_Inhalt);
 			this.getContentPane().add(btn_browse_events);
 			this.getContentPane().add(t_EventID);
 			this.getContentPane().add(btn_browse_orte);
@@ -179,6 +184,8 @@ public class MainFrame extends JFrame {
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 700);
 
+			// Im ActionListener steht, welcher Button welche Funktionen
+			// bekommt
 			ActionListener al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -190,20 +197,29 @@ public class MainFrame extends JFrame {
 					if (e.getSource() == btn_browse_subscribtions) {
 						a_Inhalt.setText(con.getSubscribedNodes().toString());
 					}
-					if (e.getSource() == btn_browse_orte) {
+					if (e.getSource() == btn_browse_nodes) {
 						a_Inhalt.setText(con.getAllNodes().toString());
 					}
-					if(e.getSource() == btn_browse_events){
+					if (e.getSource() == btn_browse_events) {
 						BigInteger id = new BigInteger(t_EventID.getText());
-						a_Inhalt.setText(con.getEvent(id));					}
-					if(e.getSource() == btn_browse_orte){
+						a_Inhalt.setText(con.getEvent(id));
+					}
+					if (e.getSource() == btn_browse_orte) {
 						BigInteger id = new BigInteger(t_EventID.getText());
-						a_Inhalt.setText(con.getOrt(id));		
+						a_Inhalt.setText(con.getOrt(id));
 					}
 				}
 			};
-			btn_zurueck.addActionListener(al);
 
+			// den Buttons wird ein ActionListener zugeteilt
+			btn_zurueck.addActionListener(al);
+			btn_browse_subscribtions.addActionListener(al);
+			btn_browse_nodes.addActionListener(al);
+			btn_browse_events.addActionListener(al);
+			btn_browse_orte.addActionListener(al);
+
+			// der Windows Listener ist dafür verantwortlich, dass wenn man ein
+			// Fenster schließt, sich auch das Programm beendet
 			this.addWindowListener(new WindowListener() {
 
 				@Override
@@ -262,10 +278,11 @@ public class MainFrame extends JFrame {
 	public class PublishFrame extends JFrame
 
 	{
-		// initialises the frame and opens it
+
 		public PublishFrame() {
 			this.getContentPane().setLayout(null);
 
+			// Die Elemente werden initailisiert
 			final JTextField t_nodeName = new JTextField("");
 			final JTextField t_von = new JTextField("");
 			final JTextField t_bis = new JTextField("");
@@ -304,6 +321,7 @@ public class MainFrame extends JFrame {
 			final JLabel l_adminName = new JLabel("Adminname:");
 			final JLabel l_adminNummer = new JLabel("Adminnummer:");
 
+			// die Elemente werden positioniert
 			int x = 210, y = 60;
 			t_nodeName.setBounds(210, y, 110, 25);
 			t_von.setBounds(210, y + 30, 110, 25);
@@ -343,6 +361,7 @@ public class MainFrame extends JFrame {
 			l_adminName.setBounds(50, y + 480, 110, 25);
 			l_adminNummer.setBounds(50, y + 510, 110, 25);
 
+			// die Elemente werden dem Frame hinzugefügt
 			this.getContentPane().add(t_nodeName);
 			this.getContentPane().add(t_von);
 			this.getContentPane().add(t_bis);
@@ -399,6 +418,9 @@ public class MainFrame extends JFrame {
 			this.getContentPane().add(btn_publish_ort);
 			this.getContentPane().add(btn_published);
 
+			// gewisse Elemente werden unsichtbar gemacht, da sie noch nicht von
+			// Bedeutung sind für den User
+
 			t_nodeName.setVisible(false);
 			t_von.setVisible(false);
 			t_bis.setVisible(false);
@@ -448,7 +470,8 @@ public class MainFrame extends JFrame {
 					}
 
 					if (e.getSource() == btn_publish_event) {
-
+						// sämtliche Elemente die benötigt werden um ein Event
+						// zu erstellen werden wieder eingeblendet
 						t_nodeName.setVisible(true);
 						t_von.setVisible(true);
 						t_bis.setVisible(true);
@@ -491,6 +514,9 @@ public class MainFrame extends JFrame {
 
 					}
 					if (e.getSource() == btn_publish_ort) {
+						// sämtliche Elemente die benötigt werden um einen Ort
+						// zu erstellen werden wieder eingeblendet
+						// und überflüssige Element ausgeblendet
 
 						t_nodeName.setVisible(true);
 						t_von.setVisible(false);
@@ -535,6 +561,8 @@ public class MainFrame extends JFrame {
 						ortp = true;
 					}
 					if (e.getSource() == btn_published) {
+						// testweiße ist die oID "3", da die NextID Funktion der
+						// Orteressource noch einen Fehler aufweißt
 						String oID = "3";
 						String[] Spieler = new String[2];
 						String[] tSpieler = new String[2];
@@ -542,6 +570,8 @@ public class MainFrame extends JFrame {
 						tSpieler[0] = t_spielerNummer1.getText();
 
 						if (ortp == true) {
+							// die notwendigen Informationen werden aus dem
+							// zugehörigen Textfeld entnommen
 							try {
 								con.publishOrt(t_nodeName.getText(),
 										t_Ort.getText(), t_o_Platz.getText(),
@@ -553,6 +583,8 @@ public class MainFrame extends JFrame {
 								e1.printStackTrace();
 							}
 						} else {
+							// die notwendigen Informationen werden aus dem
+							// zugehörigen Textfeld entnommen
 							try {
 								con.publishEvent(t_nodeName.getText(),
 										t_Ort.getText(), oID,
@@ -576,7 +608,7 @@ public class MainFrame extends JFrame {
 					}
 				}
 			};
-
+			// den Knöpfen wird ein ActionListener zugeteilt
 			btn_publish_event.addActionListener(al);
 			btn_publish_ort.addActionListener(al);
 			btn_zurueck.addActionListener(al);
@@ -635,7 +667,6 @@ public class MainFrame extends JFrame {
 	public class SubscribeFrame extends JFrame implements ActionListener
 
 	{
-		// initialises the frame and opens it
 		public SubscribeFrame() {
 			this.getContentPane().setLayout(null);
 
@@ -663,15 +694,15 @@ public class MainFrame extends JFrame {
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 720);
-			
+
+			// sobald das Fenster erzeugt wird, werden alle Nodes angezeigt
 			List<String> liste = con.getSubscribedNodes();
 			String listString = "";
 
-			for (String s : liste)
-			{
-			    listString += s + "\t";
+			for (String s : liste) {
+				listString += s + "\t";
 			}
-			 t_Inhalt.setText(listString);
+			t_Inhalt.setText(listString);
 
 			ActionListener al = new ActionListener() {
 				@Override
@@ -681,15 +712,17 @@ public class MainFrame extends JFrame {
 						new LoggedFrame();
 						setVisible(false);
 					}
-						if(e.getSource() == btn_subscribe_to){
-							con.subscribeNode(t_nodeName.getText());
-						}
-					
+					if (e.getSource() == btn_subscribe_to) {
+						// nach Eingabe des Nodenamen wird dieser subscribed
+						con.subscribeNode(t_nodeName.getText());
+					}
+
 				}
 
 			};
 
 			btn_zurueck.addActionListener(al);
+			btn_subscribe_to.addActionListener(al);
 
 			this.addWindowListener(new WindowListener() {
 
@@ -748,7 +781,6 @@ public class MainFrame extends JFrame {
 	public class UnsubscribeFrame extends JFrame implements ActionListener
 
 	{
-		// initialises the frame and opens it
 		public UnsubscribeFrame() {
 			this.getContentPane().setLayout(null);
 
@@ -775,16 +807,16 @@ public class MainFrame extends JFrame {
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 720);
-			
-			
+
+			// sobald das Fenster geladen wird, werden alle subscribed Nodes
+			// angezeigt
 			List<String> liste = con.getSubscribedNodes();
 			String listString = "";
 
-			for (String s : liste)
-			{
-			    listString += s + "\t";
+			for (String s : liste) {
+				listString += s + "\t";
 			}
-			 t_Inhalt.setText(listString);
+			t_Inhalt.setText(listString);
 
 			ActionListener al = new ActionListener() {
 				@Override
@@ -794,7 +826,10 @@ public class MainFrame extends JFrame {
 						new LoggedFrame();
 						setVisible(false);
 					}
-					if(e.getSource() == btn_unsubscribe_to){
+					if (e.getSource() == btn_unsubscribe_to) {
+						// Aus den angezeigten Nodes, gibt man den gewünschten
+						// Nodenamen in das Textfeld ein, damit man ihn
+						// ansubscribed
 						con.unsubscribeNode(t_nodeName.getText(), null);
 					}
 				}
@@ -802,6 +837,7 @@ public class MainFrame extends JFrame {
 			};
 
 			btn_zurueck.addActionListener(al);
+			btn_unsubscribe_to.addActionListener(al);
 
 			this.addWindowListener(new WindowListener() {
 
@@ -860,7 +896,6 @@ public class MainFrame extends JFrame {
 	public class VeraendernFrame extends JFrame
 
 	{
-		// initialises the frame and opens it
 		public VeraendernFrame() {
 			this.getContentPane().setLayout(null);
 
@@ -999,8 +1034,8 @@ public class MainFrame extends JFrame {
 			this.getContentPane().add(btn_publish_ort);
 			this.getContentPane().add(btn_veraendern);
 			this.getContentPane().add(t_id);
-			
-			
+
+			// erstmal unwichtige Informationen werden ausgeblendet
 			t_nodeName.setVisible(false);
 			t_von.setVisible(false);
 			t_bis.setVisible(false);
@@ -1050,7 +1085,7 @@ public class MainFrame extends JFrame {
 					}
 
 					if (e.getSource() == btn_publish_event) {
-
+						// notwendige Elemente werden eingeblendet
 						t_nodeName.setVisible(true);
 						t_von.setVisible(true);
 						t_bis.setVisible(true);
@@ -1093,7 +1128,8 @@ public class MainFrame extends JFrame {
 
 					}
 					if (e.getSource() == btn_publish_ort) {
-
+						// notwendige Elemente werden eingeblendet
+						// nicht notwendige ausgeblendet
 						t_nodeName.setVisible(true);
 						t_von.setVisible(false);
 						t_bis.setVisible(false);
@@ -1137,6 +1173,8 @@ public class MainFrame extends JFrame {
 						ortp = true;
 					}
 					if (e.getSource() == btn_veraendern) {
+						// testweiße ist die oID "3", da die NextID Funktion der
+						// Orteressource noch einen Fehler aufweißt
 						String oID = "3";
 						String[] Spieler = new String[2];
 						String[] tSpieler = new String[2];
@@ -1145,17 +1183,22 @@ public class MainFrame extends JFrame {
 
 						if (ortp == true) {
 							try {
+								// die notwendigen Informationen werden aus den
+								// Textfeldern gelesen
 								con.putOrt(t_nodeName.getText(),
 										t_Ort.getText(), t_o_Platz.getText(),
 										t_o_von.getText(), t_o_bis.getText(),
 										t_o_minS.getText(), t_o_maxS.getText(),
-										t_o_ga.getText(), t_o_Preis.getText(), t_id.getText());
+										t_o_ga.getText(), t_o_Preis.getText(),
+										t_id.getText());
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						} else {
 							try {
+								// die notwendigen Informationen werden aus den
+								// Textfeldern gelesen
 								con.putEvent(t_nodeName.getText(),
 										t_Ort.getText(), oID,
 										t_o_Platz.getText(), t_von.getText(),
@@ -1173,7 +1216,7 @@ public class MainFrame extends JFrame {
 							}
 						}
 
-						System.out.println("Publish accomplished");
+						System.out.println("Verändern accomplished");
 
 					}
 				}
@@ -1182,9 +1225,12 @@ public class MainFrame extends JFrame {
 			btn_publish_event.addActionListener(al);
 			btn_publish_ort.addActionListener(al);
 			btn_zurueck.addActionListener(al);
+			btn_veraendern.addActionListener(al);
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 700);
+			// der WindowListener macht es möglich, dass wenn man das Fenster
+			// schließt sich auch das Programm schließt
 			this.addWindowListener(new WindowListener() {
 
 				@Override
@@ -1237,25 +1283,24 @@ public class MainFrame extends JFrame {
 
 		public LoggedFrame() {
 			this.getContentPane().setLayout(null);
-			// this.initWindow();
 
 			final JButton btn_publish = new JButton("Publish");
 			final JButton btn_subscribe = new JButton("Subscribe");
 			final JButton btn_unsubscribe = new JButton("Unsubscribe");
 			final JButton btn_browse = new JButton("Browse");
-			final JButton btn_verandern = new JButton("Verändern");
+			final JButton btn_veraendern = new JButton("Verändern");
 
 			btn_publish.setBounds(20, 200, 360, 25);
 			btn_browse.setBounds(20, 250, 360, 25);
 			btn_subscribe.setBounds(20, 300, 360, 25);
 			btn_unsubscribe.setBounds(20, 350, 360, 25);
-			btn_verandern.setBounds(20, 400, 360, 25);
+			btn_veraendern.setBounds(20, 400, 360, 25);
 
 			this.getContentPane().add(btn_publish);
 			this.getContentPane().add(btn_browse);
 			this.getContentPane().add(btn_subscribe);
 			this.getContentPane().add(btn_unsubscribe);
-			this.getContentPane().add(btn_verandern);
+			this.getContentPane().add(btn_veraendern);
 			ActionListener al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -1277,7 +1322,7 @@ public class MainFrame extends JFrame {
 						new UnsubscribeFrame();
 						setVisible(false);
 					}
-					if (e.getSource() == btn_verandern) {
+					if (e.getSource() == btn_veraendern) {
 						new VeraendernFrame();
 						setVisible(false);
 					}
@@ -1288,9 +1333,8 @@ public class MainFrame extends JFrame {
 			btn_browse.addActionListener(al);
 			btn_subscribe.addActionListener(al);
 			btn_publish.addActionListener(al);
-			btn_verandern.addActionListener(al);
+			btn_veraendern.addActionListener(al);
 			btn_unsubscribe.addActionListener(al);
-			btn_verandern.addActionListener(al);
 
 			this.setVisible(true);
 			this.setBounds(10, 10, 420, 700);
